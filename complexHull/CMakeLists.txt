@@ -18,3 +18,5 @@ include_directories(
 # Add test executable
 add_executable(runTests ConvexHullTest.cpp)
 target_link_libraries(runTests ${GTEST_LIBRARY} pthread)
+# Add compiler options (debugging symbols)
+target_compile_options(runTests PRIVATE -g)
