@@ -14,7 +14,7 @@ class ConvexHullEngine{
         void orderPoints(std::vector<Point>& inputVector) {
             std::sort(inputVector.begin(),inputVector.end(), comparePoints );
         }
-
+        
         bool isValidVector(std::vector<Point>& inputVector){
             if(inputVector.size()<=2){
                 return false;

@@ -12,6 +12,7 @@ class BST : public Dictionary<Key, E>{
     private:
         BSTNode<Key, E>* root; //Root of the BST
         int nodeCount; //Number of nodes in the BST
+        std::function<int(const Key&, const Key&)> compare;
     
     //private helper functions
     void clearhelp(BSTNode<Key, E>* root){
@@ -28,11 +29,19 @@ class BST : public Dictionary<Key, E>{
             //Empty tree, create node
             return new BSTNode<Key, E>(k, it, nullptr, nullptr);
         }
+        int mComp = compare(k, root->key());
+        std::cout<<"mComp: " << mComp << std::endl;
+        if(mComp ==-1 || mComp ==0){
+            //If the new key is lower than the root key //Insert on the left
+            root->setLeft(inserthelp(root->left(), k, it));
+        } else {
+            root->setRight(inserthelp(root->right(), k, it));
+        }/*
         if(k<root->key()){
             root->setLeft(inserthelp(root->left(), k, it));
         } else {
             root->setRight(inserthelp(root->right(), k, it));
-        }
+        }*/
         return root;//Return tree with node inserted
     }
     BSTNode<Key, E>* deleteMin(BSTNode<Key, E>* rt){
@@ -58,9 +67,13 @@ class BST : public Dictionary<Key, E>{
     const Key& k){
         if(rt==nullptr){
             return nullptr;//K is not in tree
-        }else if (k<rt->key()){
+        }
+        int mComp = compare(k, rt->key());
+        //if (k<rt->key()){
+        if(mComp==-1){
             rt->setLeft(removehelp(rt->left(),k));
-        } else if (k > rt->key()){
+        //} else if (k > rt->key()){
+        } else if (mComp==1){
             rt->setRight(removehelp(rt->right(), k));
         }else{
             //Found, remove it. 
@@ -88,9 +101,12 @@ class BST : public Dictionary<Key, E>{
         if(root==nullptr){
             return nullptr;//Empty tree
         }
-        if(k<root->key()){
+        int mComp = compare(k, root->key());
+        //if(k<root->key()){
+        if(mComp==-1){
             return findhelp(root->left(), k);//Check left
-        } else if (k > root->key()){
+        //} else if (k > root->key()){
+        } else if (mComp==1){
             return findhelp(root->right(), k);//Check right
         } else {
             return root->element();//Found it
@@ -108,6 +124,15 @@ class BST : public Dictionary<Key, E>{
         std::cout << root->key() << "\n"; //Print node value
         printHelp(root->right(), level+1);//Do right subtree 
 
+    }
+    E findmax(BSTNode<Key, E>* node)const {
+        if(node==nullptr){
+            return nullptr;
+        }
+        while(node->right()!=nullptr){
+            node =  node->right();
+        }
+        return node->element();
     }
 
     public: 
@@ -171,6 +196,10 @@ class BST : public Dictionary<Key, E>{
             return findhelp(root, k);
         }
 
+        E getMax() const {
+            return findmax(root);
+        }
+
         //return the number of records in the dictionary
         int size(){
             return nodeCount;
@@ -182,6 +211,10 @@ class BST : public Dictionary<Key, E>{
             } else {
                 printHelp(root, 0);
             }
+        }
+
+        void setCompare(std::function<int(const Key&, const Key&)> c){
+            compare=c;
         }
 };
 

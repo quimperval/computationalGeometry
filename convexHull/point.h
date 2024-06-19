@@ -14,4 +14,9 @@ class Point{
 
 };
 
+std::ostream& operator<<(std::ostream& os, const Point& point) {
+    os << "(" << point.x << ", " << point.y << ")";
+    return os;
+}
+
 #endif
