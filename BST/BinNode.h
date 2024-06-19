@@ -36,4 +36,4 @@ template<typename E> class BinNode{
 };
 
 
-#endif BIN_NODE_H
+#endif //BIN_NODE_H

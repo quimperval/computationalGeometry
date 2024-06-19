@@ -114,4 +114,4 @@ template <typename Key, typename E> class BSTNode : public BinNode<E>{
         }
 };
 
-#endif BSTNODE_H
+#endif //BSTNODE_H

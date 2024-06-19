@@ -220,4 +220,4 @@ class BST : public Dictionary<Key, E>{
 };
 
 
-#endif BST_H
+#endif //BST_H

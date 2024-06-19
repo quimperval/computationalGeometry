@@ -18,4 +18,4 @@ class Integer{
         
 };
 
-#endif INTEGER_H
+#endif //INTEGER_H
