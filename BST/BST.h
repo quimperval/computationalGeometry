@@ -96,6 +96,7 @@ class BST : public Dictionary<Key, E>{
                 delete temp;
             }
         }
+        return rt;
     }
     E findhelp(BSTNode<Key, E>* root, const Key& k) const{
         if(root==nullptr){
