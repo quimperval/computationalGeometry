@@ -25,17 +25,13 @@ template <typename Key, typename E>
             height=0;
         }
 
-        AVLNode(Key K, E e, AVLNode* l=nullptr, AVLNode* r = nullptr){
-            k=K;
-            it=e;
-            lc=l;
-            rc=r;
-            height=0;
+        AVLNode(Key K, E e, AVLNode* l=nullptr, AVLNode* r = nullptr): 
+            k(K), it(e),lc(l), rc(r), height(0) {
         }
         //Destructor
         ~AVLNode(){
 
-        }
+        }       
         //Functions to set and return value and key
 
         E& element(){
@@ -92,7 +88,7 @@ template <typename Key, typename E>
             }
         }
 
-        void insert(Key newKey,     E newValue){
+        void insert(Key newKey, E newValue){
             //TO-DO
             throw std::invalid_argument("insert function in AVLNode is not implemented");
         }
