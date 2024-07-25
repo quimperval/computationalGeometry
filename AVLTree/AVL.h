@@ -1,5 +1,8 @@
 #ifndef AVL_TREE_H
 #define AVL_TREE_H
+
+#include "AVLNode.h"
+
 //AVL Binary Search Tree implementation for the
 //Dictionary ADT 
 template <typename Key, typename E>
@@ -8,7 +11,7 @@ class AVL : public Dictionary<Key, E> {
 //will be inheriting the Dictionary class. 
 
     private: 
-        AVLNode<Key, E>* root;//Root of the AVL BST
+        AVLNode<Key, E>* root = nullptr;//Root of the AVL BST
         int nodecount; //Number of nodes in the BST
     
         //private "helper" functions
@@ -170,6 +173,7 @@ class AVL : public Dictionary<Key, E> {
             } else {
                 //Implement the AVL algorithm to delete a node and
                 //balance the tree after the delation
+                return nullptr;
             }
         }
 
