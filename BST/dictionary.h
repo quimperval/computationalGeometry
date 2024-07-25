@@ -1,3 +1,5 @@
+#ifndef DICTIONARY_H
+#define DICTIONARY_H
 // From the software distribution accompanying the textbook
 // "A Practical Introduction to Data Structures and Algorithm Analysis,
 // Third Edition (C++)" by Clifford A. Shaffer.
@@ -41,3 +43,4 @@ public:
   // Return the number of records in the dictionary.
   virtual int size() = 0;
 };
+#endif //DICTIONARY_H
