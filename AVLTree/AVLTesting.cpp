@@ -53,6 +53,24 @@ TEST_F(AVLTesting, testEventPointGreaterThanTrue){
     std::cout<<"######Printing AVL######"<< std::endl;
     avlForIntInt->print();
     ASSERT_THAT(5, avlForIntInt->size());
+
+    Integer* myInt30 = new Integer(30);  
+    avlForIntInt->insert(myInt30->getValue(), myInt30);
+    std::cout<<"######Printing AVL######"<< std::endl;
+    avlForIntInt->print();
+    ASSERT_THAT(6, avlForIntInt->size());
+
+    Integer* myInt35 = new Integer(35);  
+    avlForIntInt->insert(myInt35->getValue(), myInt35);
+    std::cout<<"######Printing AVL######"<< std::endl;
+    avlForIntInt->print();
+    ASSERT_THAT(7, avlForIntInt->size());
+
+    Integer* myInt32 = new Integer(32);  
+    avlForIntInt->insert(myInt32->getValue(), myInt32);
+    std::cout<<"######Printing AVL######"<< std::endl;
+    avlForIntInt->print();
+    ASSERT_THAT(8, avlForIntInt->size());
 }
 /*
 TEST_F(LSITesting, testEventPointGreaterThanFalse){

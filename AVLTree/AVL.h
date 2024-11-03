@@ -9,8 +9,86 @@ template <typename Key, typename E>
 class AVL : public Dictionary<Key, E> {
 //The public Dictionary<Key, E> indicated that this class
 //will be inheriting the Dictionary class. 
+    public: 
+        //Constructor
+        AVL(){
+            root = nullptr;
+            nodecount = 0;
+        }
+        //Destructor
+        ~AVL(){
+            clearhelp(root);
+        }
 
-    private: 
+        //Reinitialize the tree
+        void clear(){
+            clearhelp(root);
+            root = nullptr;
+            nodecount=0;
+        }       
+
+        //Insert a record into the tree
+        //k - Key value of the item
+        //e - The item to insert
+        void insert(const Key& k, const E& e){
+            root = insertHelp(root, k, e);
+            nodecount++;
+        }
+
+        //Remove a record from the tree
+        //k -  Key value of the item
+        //Return: the item removed, or nullptr if there is none
+        E remove(const Key& k){
+            //Find the item
+            E temp = findHelp(root, k);
+            if(temp!=nullptr){
+                root = removeHelp(root, k);
+                nodecount--;
+            }
+            return temp;
+        }
+
+        //Remove and return the root node from 
+        //the dictionary
+        //Return - the record removed, null if tree
+        //is empty
+        E removeAny(){
+            //Delete min value
+            if(root!=nullptr){
+                E temp = root->element();
+                root = removeHelp(root, root->key());
+            } 
+            return nullptr;
+        }
+
+        //Return record with key value k, nullptr if none exist.
+        //k: the key value to find
+        //Return some record matching "k"
+        //Return true if such exists, false otherwise
+        //If multiple records match "k" return an arbitrary one.
+        E find(const Key& k) const{
+            return findHelp(root, k);
+        }
+
+        //Return the number of records in the dictionary
+        int size(){
+            return nodecount;
+        }
+
+        //Print the contents of the AVL 
+        void print() {
+            if(root==nullptr){
+                std::cout << "The AVL is empty. \n";
+        }else {
+                printhelp(root, 0);
+            }
+        }
+
+        E findMax() const{
+            return getMaxHelp(root);
+        }
+
+    private:
         AVLNode<Key, E>* root = nullptr;//Root of the AVL BST
         int nodecount; //Number of nodes in the BST
     
@@ -127,7 +205,8 @@ class AVL : public Dictionary<Key, E> {
             AVLNode<Key, E>* T2 = y->left();
             std::cout << "leftRotate \n";
             //Do the rotation
-            y->setLeft(node);   
+            y->setLeft(node);
+            node->setRight(T2);
             node->setHeight(
                 getHeight(node->left()) >getHeight( node->right()) ? 
                 getHeight(node->left()) +1 : 
@@ -202,17 +281,25 @@ class AVL : public Dictionary<Key, E> {
             if(rt==nullptr){
                 return;//Empty tree
             }
-            //std::cout << "Printing left \n";
-            printhelp(rt->left(), level+1);
+            if(rt->left()!=nullptr){
+                std::cout << "Printing left \n";
+                printhelp(rt->left(), level+1);
+            }
+            
             //Indent to level
+            std::cout << "##########";
             for(int i=0; i< level; i++){
                 std::cout << "    ";
             }
             //Print node value
             
             std::cout << rt->key() << "\n";
-            std::cout << "Printing right \n";
-            printhelp(rt->right(), level+1);
+            
+            if(rt->right()!=nullptr){
+                std::cout << "Printing right \n";
+                printhelp(rt->right(), level+1);
+            }
+            
         }
 
         AVLNode<Key, E>* getMaxHelp(
@@ -224,85 +311,7 @@ class AVL : public Dictionary<Key, E> {
                 }
             }
 
-        public: 
-            //Constructor
-            AVL(){
-                root = nullptr;
-                nodecount = 0;
-            }
-            //Destructor
-            ~AVL(){
-                clearhelp(root);
-            }
-
-            //Reinitialize the tree
-            void clear(){
-                clearhelp(root);
-                root = nullptr;
-                nodecount=0;
-            }       
-
-            //Insert a record into the tree
-            //k - Key value of the item
-            //e - The item to insert
-            void insert(const Key& k, const E& e){
-                root = insertHelp(root, k, e);
-                nodecount++;
-            }
-
-            //Remove a record from the tree
-            //k -  Key value of the item
-            //Return: the item removed, or nullptr if there is none
-            E remove(const Key& k){
-                //Find the item
-                E temp = findHelp(root, k);
-                if(temp!=nullptr){
-                    root = removeHelp(root, k);
-                    nodecount--;
-                }
-                return temp;
-            }
-
-            //Remove and return the root node from 
-            //the dictionary
-            //Return - the record removed, null if tree
-            //is empty
-            E removeAny(){
-                //Delete min value
-                if(root!=nullptr){
-                    E temp = root->element();
-                    root = removeHelp(root, root->key());
-                } 
-                return nullptr;
-            }
-
-            //Return record with key value k, nullptr if none exist.
-            //k: the key value to find
-            //Return some record matching "k"
-            //Return true if such exists, false otherwise
-            //If multiple records match "k" return an arbitrary one.
-            E find(const Key& k) const{
-                return findHelp(root, k);
-            }
-
-            //Return the number of records in the dictionary
-            int size(){
-                return nodecount;
-            }
-
-            //Print the contents of the AVL 
-            void print() {
-                if(root==nullptr){
-                    std::cout << "The AVL is empty. \n";
-
-                }else {
-                    printhelp(root, 0);
-                }
-            }
-
-            E findMax() const{
-                return getMaxHelp(root);
-            }
+        
 
 };
 
