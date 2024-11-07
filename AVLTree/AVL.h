@@ -57,7 +57,7 @@ class AVL : public Dictionary<Key, E> {
             if(root!=nullptr){
                 E temp = root->element();
                 root = removeHelp(root, root->key());
-            } 
+            }
             return nullptr;
         }
 
@@ -84,91 +84,102 @@ class AVL : public Dictionary<Key, E> {
             }
         }
 
+        /*
+        Compilation error: 
+        error: passing ‘const AVL<EventPoint, EventPoint*>’ as ‘this’ argument discards qualifiers [-fpermissive]
+   89 |             return getMaxHelp(root);
+      |                    ~~~~~~~~~~^~~~~~
+      The issue here is that your findMax function is marked as const, which means it should not modify any member variables of the class. 
+      However, your getMaxHelp function is not const, which implies that it might modify this,
+       and the compiler flags this as an error when getMaxHelp is called in a const context.
+        */
         E findMax() const{
+            //E getMaxHelp(AVLNode<Key, E>* rt)
             return getMaxHelp(root);
         }
+
+    /*
+        HERE START THE PRIVATE SECTION
+    */
 
     private:
         AVLNode<Key, E>* root = nullptr;//Root of the AVL BST
         int nodecount; //Number of nodes in the BST
     
         //private "helper" functions
-        void clearhelp(AVLNode<Key,E>* root){
-            if(root==nullptr){
+        void clearhelp(AVLNode<Key,E>* rt){
+            if(rt==nullptr){
                 return;
             } 
-            clearhelp(root->left());
-            clearhelp(root->left());
-            delete root;
+            clearhelp(rt->left());
+            clearhelp(rt->left());
+            delete rt;
         }
 
         AVLNode<Key, E>* insertHelp(
-            AVLNode<Key, E>* root, const Key& k, const E& it){
+            AVLNode<Key, E>* rt, const Key& k, const E& it){
             //HERE to implement the AVL algorithm to 
             //insert a node and balance the tree.
 
-            if(root==nullptr){
+            if(rt==nullptr){
                 //std::cout << "Creating AVL node with key: " << k << " and returning the new node\n"; 
-
                 return new AVLNode<Key, E>(k, it, nullptr, nullptr);
-            } else if (k< root->key()){
+            } else if (k< rt->key()){
                 //std::cout << "Calling setLeft(insertHelp)" << "\n";
-                root->setLeft(insertHelp(root->left(), k, it));
-            } else if(k>root->key()) {
+                rt->setLeft(insertHelp(rt->left(), k, it));
+            } else if(k>rt->key()) {
                 //std::cout << "Calling setRight(insertHelp)" << "\n";
-                root->setRight(insertHelp(root->right(), k, it));
+                rt->setRight(insertHelp(rt->right(), k, it));
                 //std::cout << "Printing right \n";
                 //std:: cout << "["<<root->right()->key() << ": "<< root->right()->element() << "]\n";
             } else {
-                //TO-DO pending to implement the update of the it, 
-                //when a new it is provided
-                root->setElement(it);
+                rt->setElement(it);
             }
 
-            if(root==nullptr){
+            if(rt==nullptr){
                 std::cout << "root is nullptr\n";
             }
 
-            int leftHeight = getHeight(root->left());
-            int rightHeight = getHeight(root->right());
+            int leftHeight = getHeight(rt->left());
+            int rightHeight = getHeight(rt->right());
 
             if(leftHeight>rightHeight){
-                root->setHeight(1+leftHeight);
+                rt->setHeight(1+leftHeight);
             } else {
-                root->setHeight(1+rightHeight);
+                rt->setHeight(1+rightHeight);
             }
             std::cout << "Printing before Rebalancing \n";
             print();
 
-            int balance = getBalance(root);
+            int balance = getBalance(rt);
             std::cout << "Balance: " << balance << " \n";
             //Left Left case
-            if(balance > 1 && k< root->left()->key()){
+            if(balance > 1 && k< rt->left()->key()){
                 std::cout << "Left left case \n";
-                return rightRotate(root);
+                return rightRotate(rt);
             }
 
             //Right right case
-            if(balance < -1 && k > root->right()->key()){
+            if(balance < -1 && k > rt->right()->key()){
                 std::cout << " Right right case \n";
-                return leftRotate(root);
+                return leftRotate(rt);
             }
             //Left right case
-            if(balance > 1 && k > root->left()->key()){
+            if(balance > 1 && k > rt->left()->key()){
                 std::cout << "Left-Right case \n";
-                root->setLeft(leftRotate(root->left()));
-                return rightRotate(root);
+                rt->setLeft(leftRotate(rt->left()));
+                return rightRotate(rt);
             }
 
             //Right left case 
-            if(balance < -1 && k < root->right()->key()){
+            if(balance < -1 && k < rt->right()->key()){
                 std::cout << "Right left case \n";
-                root->setRight(rightRotate(root->right()));
-                return leftRotate(root);
+                rt->setRight(rightRotate(rt->right()));
+                return leftRotate(rt);
             }
             //Return the unchanged node pointer
             //std::cout << "Returning unchanged node pointer \n";
-            return root;
+            return rt;
         }
 
         int getHeight(AVLNode<Key, E>* node){
@@ -220,11 +231,11 @@ class AVL : public Dictionary<Key, E> {
         }
 
 
-        int getBalance(AVLNode<Key, E>* root){
-            if(root==nullptr){
+        int getBalance(AVLNode<Key, E>* rt){
+            if(rt==nullptr){
                 return 0;
             }
-            return getHeight(root->left())-getHeight(root->right());
+            return getHeight(rt->left())-getHeight(rt->right());
         }
 
         AVLNode<Key, E>* deleteMin(
@@ -249,28 +260,107 @@ class AVL : public Dictionary<Key, E> {
             //K is not in the tree
             if(rt==nullptr){
                 return nullptr;
+            } else if (k< rt->key()){
+                //std::cout << "Calling setLeft(insertHelp)" << "\n";
+                AVLNode<Key, E>* left = removeHelp(rt->left(), k);
+                rt->setLeft(left);
+            } else if(k>rt->key()) {
+                //std::cout << "Calling setRight(insertHelp)" << "\n";
+                AVLNode<Key, E>* right = removeHelp(rt->right(), k);
+                rt->setRight(right);
+                //std::cout << "Printing right \n";
+                //std:: cout << "["<<root->right()->key() << ": "<< root->right()->element() << "]\n";
             } else {
-                //Implement the AVL algorithm to delete a node and
-                //balance the tree after the delation
-                return nullptr;
+                //Root is the element we're deleting. 
+                if(rt->isLeaf()==true){
+                    std::cout << "Is leaf, returning rt" << "\n";
+                    delete rt;
+                    return nullptr;
+                } else if(rt->left()==nullptr){
+                    //return the right as the root
+                    std::cout << "Returning right as left is null \n";
+                    AVLNode<Key, E>* temp = rt->right();
+                    delete rt;
+                    return temp;
+                } else if(rt->right()==nullptr){
+                    //return the right as the root
+                    std::cout << "Returning left as right is null \n";
+                    AVLNode<Key, E>* temp = rt->left();
+                    delete rt;
+                    return temp;
+                } else {
+                     // Find in-order successor (smallest in the right subtree)
+                    std::cout << "Finding in order successor \n";
+                    AVLNode<Key, E>* temp = rt->right();
+                    while (temp->left() != nullptr) {
+                        temp = temp->left();
+                    }
+                    // Replace node's key and element with successor's key and element
+                    rt->setKey(temp->key());
+                    rt->setElement(temp->element());
+                    // Delete the in-order successor
+                    rt->setRight(removeHelp(rt->right(), temp->key()));
+                }
+                
             }
+
+            int leftHeight = getHeight(rt->left());
+            int rightHeight = getHeight(rt->right());
+
+            if(leftHeight>rightHeight){
+                rt->setHeight(1+leftHeight);
+            } else {
+                rt->setHeight(1+rightHeight);
+            }
+            std::cout << "Printing before Rebalancing \n";
+            print();
+
+            int balance = getBalance(rt);
+            std::cout << "Balance: " << balance << " \n";
+            //Left Left case
+            if(balance > 1 && k< rt->left()->key()){
+                std::cout << "Left left case \n";
+                return rightRotate(rt);
+            }
+
+            //Right right case
+            if(balance < -1 && k > rt->right()->key()){
+                std::cout << " Right right case \n";
+                return leftRotate(rt);
+            }
+            //Left right case
+            if(balance > 1 && k > rt->left()->key()){
+                std::cout << "Left-Right case \n";
+                rt->setLeft(leftRotate(rt->left()));
+                return rightRotate(rt);
+            }
+
+            //Right left case 
+            if(balance < -1 && k < rt->right()->key()){
+                std::cout << "Right left case \n";
+                rt->setRight(rightRotate(rt->right()));
+                return leftRotate(rt);
+            }
+            //Return the unchanged node pointer
+            //std::cout << "Returning unchanged node pointer \n";
+            return rt;
         }
 
         E findHelp(
-            AVLNode<Key, E>* root, 
+            AVLNode<Key, E>* rt, 
             const Key& k) const {
-            if(root==nullptr){
+            if(rt==nullptr){
                 return nullptr;
             }
-            if(k<root->key()){
+            if(k<rt->key()){
                 //Check left
-                return findHelp(root->left(), k);
-            }else if (k>root->key()){
+                return findHelp(rt->left(), k);
+            }else if (k>rt->key()){
                 //Check right
-                return findHelp(root->right(), k);
+                return findHelp(rt->right(), k);
             } else {
                 //Found it
-                return root->element();
+                return rt->element();
             }
         }
         
@@ -302,17 +392,16 @@ class AVL : public Dictionary<Key, E> {
             
         }
 
-        AVLNode<Key, E>* getMaxHelp(
-            AVLNode<Key, E>* rt){
-                if(rt->right()){
-                    return rt;
-                } else {
-                    return getMaxHelp(rt->right());
-                }
+        E getMaxHelp(AVLNode<Key, E>* rt) const {
+            if (rt == nullptr) {
+                return nullptr;
             }
-
-        
-
+                AVLNode<Key, E>* temp = rt->right();
+                while (temp->right() != nullptr) {
+                    temp = temp->right();
+                }
+                return temp->element();
+            }
 };
 
 #endif //AVL_TREE_H

@@ -71,6 +71,10 @@ TEST_F(AVLTesting, testEventPointGreaterThanTrue){
     std::cout<<"######Printing AVL######"<< std::endl;
     avlForIntInt->print();
     ASSERT_THAT(8, avlForIntInt->size());
+
+    std::cout<<"######Removing node with key 8######"<< std::endl;
+    avlForIntInt->remove(8);
+    ASSERT_THAT(7, avlForIntInt->size());
 }
 /*
 TEST_F(LSITesting, testEventPointGreaterThanFalse){
