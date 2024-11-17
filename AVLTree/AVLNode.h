@@ -17,6 +17,7 @@ template <typename Key, typename E>
         AVLNode* lc; //Pointer to left child
         AVLNode* rc; //Pointer to right child
         int height;
+        bool marked = false;
 
     public:
         //Two constructors -- with and without initial values
@@ -99,6 +100,14 @@ template <typename Key, typename E>
 
         int getHeight(){
             return height;
+        }
+
+        void setMarked(bool mValue){
+            marked = mValue;
+        }
+
+        bool getMarked(){
+            return marked;
         }
 
 };

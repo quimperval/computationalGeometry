@@ -75,6 +75,12 @@ TEST_F(AVLTesting, testEventPointGreaterThanTrue){
     std::cout<<"######Removing node with key 8######"<< std::endl;
     avlForIntInt->remove(8);
     ASSERT_THAT(7, avlForIntInt->size());
+
+    auto mStack = avlForIntInt->getPostOrderElements();
+    for(auto val : mStack){
+        std::cout << "val: " << val->element()->getValue() << "\n";
+    }
+    ASSERT_THAT(7, mStack.size());
 }
 /*
 TEST_F(LSITesting, testEventPointGreaterThanFalse){
