@@ -76,7 +76,7 @@ TEST_F(AVLTesting, testEventPointGreaterThanTrue){
     avlForIntInt->remove(8);
     ASSERT_THAT(7, avlForIntInt->size());
 
-    auto mStack = avlForIntInt->getPostOrderElements();
+    auto mStack = avlForIntInt->getInOrderElements();
     for(auto val : mStack){
         std::cout << "val: " << val->element()->getValue() << "\n";
     }

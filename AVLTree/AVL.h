@@ -101,8 +101,8 @@ class AVL : public Dictionary<Key, E> {
         }
         //pop removes the top value from the stack
         //top returns the top value from the stack, but it does not
-        std::list<AVLNode<Key, E>*> getPostOrderElements() const{
-            //std::cout << "getPostOrderElements\n";
+        std::list<AVLNode<Key, E>*> getInOrderElements() const{
+            //std::cout << "getInOrderElements\n";
             if(root==nullptr){
                 //Doing nothing because the tree is empty
                 std::cout << "Doing nothign, the tree is empty\n";
