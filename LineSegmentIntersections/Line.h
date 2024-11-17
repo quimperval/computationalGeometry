@@ -25,10 +25,11 @@ class Line{
             return p2;
         }
 
-    private: 
+    private:
         Point* p1 = nullptr;
         Point* p2= nullptr;
 
+    friend bool operator==(const Line& line1, const Line& line2);
 };
 
 
@@ -39,6 +40,13 @@ const Line& line){
     << ", p1("<< line.getP2()->getX() << ", " 
     << line.getP2()->getY() << ")]";
     return os;
+}
+
+bool operator==(const Line& line1, const Line& line2){
+    if(line1.getP1()==line2.getP1() && line1.getP2()==line2.getP2()){
+        return true;
+    }
+    return false;
 }
 
 #endif //LINE_H

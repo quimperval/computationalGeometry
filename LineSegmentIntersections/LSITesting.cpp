@@ -50,7 +50,12 @@ TEST_F(LSITesting, testCreateLine){
         IntersectionFinder* finder = new IntersectionFinder();
         ASSERT_THAT(finder, NotNull());
         finder->addLine(line);
+        std::cout << "event point queue size: " << finder->getEventPointsCount() << "\n";
         ASSERT_THAT(2, finder->getEventPointsCount());
+
+        std::cout << *(finder->getMaxEventPoint()) << "\n";
+        std::cout << "Max is: " << *(finder->getMaxEventPoint())<<"\n";
+        finder->printLinesByEventPoint();
 }
 /*
 TEST_F(LSITesting, testEventPointLessThanTrue){
