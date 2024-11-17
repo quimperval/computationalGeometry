@@ -2,15 +2,40 @@
 #define EVENT_POINT_H
 
 #include "point.h"
+#include <bits/stdc++.h>
+#include <unordered_set>
+
+
 //#include "AVL.h"
 #include "Line.h"
 #include <iostream>
 
 class EventPoint : public Point{
 
+    struct LineHash{
+        /**
+         * without the const in this method operator() we would have the below error in compilation:
+         * /usr/include/c++/11/bits/hashtable_policy.h:1217:23: error: 
+         * /usr/include/c++/11/bits/hashtable_policy.h:1217:23: error: static assertion failed: hash function must be invocable with an argument of key type
+         * 1217 |         static_assert(__is_invocable<const _Hash&, const _Key&>{},
+         * 
+         */
+            std::size_t operator()(const Line& l) const {
+                
+                //^ - bitwise xor operator
+                return std::hash<float>()(l.getP1()->getX()) ^
+                    std::hash<float>()(l.getP1()->getX()) ^
+                    std::hash<float>()(l.getP2()->getX()) ^
+                    std::hash<float>()(l.getP2()->getX()) 
+                    ;
+            }
+    };
+
     private: 
-        //AVL<Line&,Line*> linesStartingAtEventPoint =  new AVL<Line&, Line*>; 
-        //AVL<Line&,Line*> linesEndingAtEventPoint =  new AVL<Line&, Line*>; 
+        
+        
+        std::unordered_set<Line, LineHash> linesStartingAtEventPoint;
+        std::unordered_set<Line, LineHash> linesEndingAtEventPoint;
     
     public:
         EventPoint():Point(){
@@ -30,32 +55,35 @@ class EventPoint : public Point{
         }
 
         void addLineToListStartingAtEventPoint(Line* line){
-            std::cout << "Addling " << line << " to the list of lines starting in this point \n";
+            std::cout << "Adding line " << *line << " to the list of lines starting in this point " << *this << "\n";
+            linesStartingAtEventPoint.insert(*line);
         }
 
         void addLineToListEndingAtEventPoint(Line* line){
-            std::cout << "Addling " << line << " to the list of lines ending in this point \n";
+            std::cout << "Adding line " << *line << " to the list of lines ending in this point " << *this << "\n";
+            linesEndingAtEventPoint.insert(*line);
         }
 
-        void addLine(Line* line){
-            EventPoint p1(*line->getP1());
-            EventPoint p2(*line->getP2());
-            if(*this==p1){
-                std::cout << "P1 is equal to " << *this << "\n";
-            }/* else if(*this==p2){
-                std::cout << "P2 is equal to " << *this << "\n";
-            }*/ 
-        }
+        
 
         friend bool operator ==(const EventPoint& e1, const EventPoint& e2);
         friend bool operator >(const EventPoint& e1, const EventPoint& e2);
         friend bool operator <(const EventPoint& e1, const EventPoint& e2);
+
+        };
+
+        
         
 
-};
+
 bool operator==(const EventPoint& e1, const EventPoint& e2){
     
     return (e1.getX()==e2.getX()) && (e1.getY() == e2.getY());
+}
+
+bool operator!=(const EventPoint& e1, const EventPoint& e2){
+    
+    return (e1.getX()!=e2.getX()) || (e1.getY() != e2.getY());
 }
 
 bool operator>(const EventPoint& e1, const EventPoint& e2){
