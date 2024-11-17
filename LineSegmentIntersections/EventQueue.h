@@ -15,6 +15,14 @@ class EventQueue{
             
         }
         
+        boolean insertEvent(EventPoint*){
+            //TODO
+        }
+
+        EventPoint* nextEvent(){
+            //TODO
+        }
+
         void addLine(Line* line){
             /**/
             std::cout << "Adding line "<< *line << "\n";
