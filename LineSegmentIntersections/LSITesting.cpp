@@ -55,7 +55,7 @@ TEST_F(LSITesting, testCreateLine){
 
         std::cout << *(finder->getMaxEventPoint()) << "\n";
         std::cout << "Max is: " << *(finder->getMaxEventPoint())<<"\n";
-        finder->printLinesByEventPoint();
+        finder->printEventPointsOrdered();
 }
 /*
 TEST_F(LSITesting, testEventPointLessThanTrue){
