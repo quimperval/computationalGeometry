@@ -75,8 +75,8 @@ class IntersectionFinder{
             return eventQueue->findMax();
         }
 
-        void printLinesByEventPoint() const{
-            std::cout << "printLinesByEventPoint\n";
+        void printEventPointsOrdered() const{
+            std::cout << "printEventPointsOrdered\n";
             auto orderedElements= eventQueue->getInOrderElements();
             for(auto elem : orderedElements){
                 std::cout << *elem->element() << "\n";
