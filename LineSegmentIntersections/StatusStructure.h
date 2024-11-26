@@ -37,7 +37,10 @@ class StatusStructure{
         }
 
         void addIntersectionWithLine(Line* line, Line* sweepLine){
+            //calculate the insersection point between two lines
 
+            
+            
         }
 
     private:
