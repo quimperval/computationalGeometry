@@ -28,14 +28,13 @@ class Line{
             return p2;
         }
 
-        Point* getIntersectionwithSweepLine(Line* sweepLine){
+        Point* getIntersectionwithSweepLine(){
             //TO-DO
             return nullptr;
         }
 
         void setIntersectionwithSweepLine(Line* sweepLine){
             //TO-DO
-            return nullptr;
         }
 
         void resetIntersectionwithSweepLine(){
