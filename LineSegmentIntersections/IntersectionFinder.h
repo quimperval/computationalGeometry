@@ -3,17 +3,20 @@
 
 #include "AVL.h"
 #include "EventQueue.h"
+#include "StatusStructure.h"
 
 class IntersectionFinder{
     private:
         
         EventQueue* eventQueue=nullptr;
+        StatusStructure* statusStr=nullptr;
+        Point* minX = nullptr;
+        Point* maxX = nullptr;
     
     public:
 
         IntersectionFinder(){
             eventQueue = new EventQueue();
-           
         }
 
 
@@ -35,6 +38,12 @@ class IntersectionFinder{
             eventQueue->printEventPointsOrdered();
             
         }
+
+        EventPoint* getNextEvent(){
+            eventQueue->getNextEvent();
+        }
+
+        
 
     private:
         
