@@ -33,9 +33,15 @@ class Line{
             return nullptr;
         }
 
+        void setIntersectionwithSweepLine(Line* sweepLine){
+            //TO-DO
+            return nullptr;
+        }
+
         void resetIntersectionwithSweepLine(){
             intersectionWithSweepLine = nullptr;
         }
+        
         
 
     private:
