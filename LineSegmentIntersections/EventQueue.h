@@ -5,22 +5,25 @@
 #include "EventPoint.h"
 class EventQueue{
     private: 
-         AVL<EventPoint, EventPoint*>* eventPoints = new AVL<EventPoint, EventPoint*>();
+        AVL<EventPoint, EventPoint*>* eventPoints = new AVL<EventPoint, EventPoint*>();
 
     public: 
         EventQueue(){
-           // eventPoints = ;
+           
         }
         ~EventQueue(){
             
         }
         
-        boolean insertEvent(EventPoint*){
+        bool insertEvent(EventPoint*){
             //TODO
+            return false;
         }
 
-        EventPoint* nextEvent(){
-            //TODO
+        EventPoint* getNextEvent(){
+            EventPoint* nextEvent =  eventPoints->findMax();
+            eventPoints->remove(*nextEvent);
+            return nextEvent;
         }
 
         void addLine(Line* line){
@@ -31,22 +34,32 @@ class EventQueue{
             std::cout << "Adding p1 "<< *p1 << "\n";
     
             std::cout << "@@@@@@ Trying to add " << *e1 << "\n";
-            if (!eventPoints) {
-                std::cerr << "eventPoints is null before accessing!\n";
+            EventPoint* e1Temp = eventPoints->find(*e1);
+            if(e1Temp!=nullptr){
+                std::cout<< "The point e1 is already in the event queue\n";
+                e1 = e1Temp;
+                e1Temp= nullptr;
+            } else {
+                eventPoints->insert(*e1, e1);
             }
-             if(eventPoints==nullptr){
-                std::cout << "@@@@@@ eventPoints is null \n";
-            }
-            eventPoints->insert(*e1, e1);
+            
+
+            
+        
             Point* p2 = line->getP2();
             EventPoint* e2 = new EventPoint(*p2);
             std::cout << "Adding p2 "<< *p2 << "\n";
 
             std::cout << "@@@@@@ Trying to add " << *e2 << "\n";
-            if(eventPoints==nullptr){
-                std::cout << "@@@@@@ eventPoints is null \n";
+            EventPoint* e2Temp = eventPoints->find(*e2);
+            if(e2Temp!=nullptr){
+                std::cout<< "The point e2 is already in the event queue\n";
+                e2 = e2Temp;
+                e2Temp= nullptr;
+            } else {
+                eventPoints->insert(*e2, e2);
             }
-            eventPoints->insert(*e2, e2);
+            
             std::cout << "Printing event queue\n";
             eventPoints->print();
            
