@@ -4,6 +4,9 @@
 #include "point.h"
 
 class Line{
+
+    
+
     public:
         Line(){
 
@@ -25,9 +28,20 @@ class Line{
             return p2;
         }
 
+        Point* getIntersectionwithSweepLine(Line* sweepLine){
+            //TO-DO
+            return nullptr;
+        }
+
+        void resetIntersectionwithSweepLine(){
+            intersectionWithSweepLine = nullptr;
+        }
+        
+
     private:
         Point* p1 = nullptr;
         Point* p2= nullptr;
+        Point* intersectionWithSweepLine = nullptr;
 
     friend bool operator==(const Line& line1, const Line& line2);
 };
