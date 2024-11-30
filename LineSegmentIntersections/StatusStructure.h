@@ -42,18 +42,6 @@ class StatusStructure{
             
             for(Line* line : elements){
                 std::cout << *line << std::endl;
-                /*if(item==nullptr){
-                    std::cout << "item is null\n";
-                } else {
-                    std::cout << "item is Not null\n";
-                }
-                Line* line = item->element();*/
-                /*
-                if(line==nullptr){
-                    std::cout <<" line is null\n";
-                } else {
-                    std::cout <<" line is NOT null\n";
-                }*/
                 addLine(line, sweepLine);
             }
         }
