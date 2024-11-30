@@ -33,6 +33,11 @@ class AVL : public Dictionary<Key, E> {
         //k - Key value of the item
         //e - The item to insert
         void insert(const Key& k, const E& e){
+            std::cout <<"************************\n" ;
+            std::cout <<"*******INSERTING*******\n" ;
+            std::cout <<"************************\n" ;
+            std::cout << "key: "<< k << std::endl;
+            std::cout << "value: "<< *e << std::endl;
             root = insertHelp(root, k, e);
             nodecount++;
         }
@@ -101,20 +106,20 @@ class AVL : public Dictionary<Key, E> {
         }
         //pop removes the top value from the stack
         //top returns the top value from the stack, but it does not
-        std::list<AVLNode<Key, E>*> getInOrderElements() const{
-            //std::cout << "getInOrderElements\n";
+        std::list<AVLNode<Key, E>*> getInOrderElementsAsNodes(){
+            std::cout << "getInOrderElementsAsNodes\n";
             if(root==nullptr){
                 //Doing nothing because the tree is empty
                 std::cout << "Doing nothign, the tree is empty\n";
                 return std::list<AVLNode<Key, E>*>(); // Return an empty stack
-
             }
             std::list<AVLNode<Key, E>*> response;
             std::stack<AVLNode<Key, E>*> mStack;
             int counter =0;
-          
-            //std::cout << "Adding root to the stack\n";
+            std::cout << "My Size: " << size() << std::endl;
+            std::cout << "Adding root to the stack\n";
             mStack.push(root);
+            std::cout << "root: " << root << std::endl;
             while(!mStack.empty()){
                 //std::cout << "##############################";
                 //std::cout << "###### step "<< counter << "\n";
@@ -162,7 +167,73 @@ class AVL : public Dictionary<Key, E> {
                     }
                 }
             }
+            std::cout << "Returning response from getInOrderElementsAsNodes\n" ;
+            return response;
             
+        }
+
+        std::list<E> getInOrderElements(){
+            std::cout << "getInOrderElements\n";
+            if(root==nullptr){
+                //Doing nothing because the tree is empty
+                std::cout << "Doing nothign, the tree is empty\n";
+                return std::list<E>(); // Return an empty stack
+            }
+            std::list<E> response;
+            std::stack<AVLNode<Key, E>*> mStack;
+            int counter =0;
+            std::cout << "My Size: " << size() << std::endl;
+            std::cout << "Adding root to the stack\n";
+            mStack.push(root);
+            std::cout << "root: " << root << std::endl;
+            while(!mStack.empty()){
+                //std::cout << "##############################";
+                //std::cout << "###### step "<< counter << "\n";
+                counter++;
+                if(counter>20){
+                   // break;
+                }
+                
+                int counter =0;
+                while(!mStack.empty()){
+                    AVLNode<Key, E>* v = mStack.top();
+                    //std::cout << "Starting cycle while v has left child\n";
+                    while(v->left()!=nullptr){
+                        //std::cout << "Inside while v has left child\n";
+                        mStack.push(v->left());
+                        v = v->left();
+                    }
+                    //std::cout << "Removing the top and assigning it to the v variable\n";
+                    v = mStack.top();
+                    mStack.pop();
+                    response.push_back(v->element());
+                    if(v->right()!=nullptr){
+                        //std::cout << "Case when v has a right child\n";
+                        //std::cout << "Pushing right child of v to the stack\n";
+                        mStack.push(v->right());
+                        //std::cout << "Assigning the right child to variable v\n";
+                        v = v->right();
+                    } else {
+                        //std::cout << "Case when v HAS NOT a right child\n";
+
+                        while(!mStack.empty() && v->right()==nullptr){
+                            //std::cout << "Inside while loop mStack is not empty and v has not a right child\n";
+                            v = mStack.top();
+                            mStack.pop();
+                            response.push_back(v->element());
+                        }
+                    }
+
+                    if(v->right()!=nullptr){
+                        //std::cout << "Case v has a right child\n";
+                        //std::cout << "Pushing right child to stacm\n";
+                        mStack.push(v->right());
+                        //std::cout << "Assigning right child to v\n";
+                        v = v->right();
+                    }
+                }
+            }
+            std::cout << "Returning response from getInOrderElements\n" ;
             return response;
             
         }
