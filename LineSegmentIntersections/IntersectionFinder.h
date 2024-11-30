@@ -40,7 +40,7 @@ class IntersectionFinder{
         }
 
         EventPoint* getNextEvent(){
-            eventQueue->getNextEvent();
+            return eventQueue->getNextEvent();
         }
 
         

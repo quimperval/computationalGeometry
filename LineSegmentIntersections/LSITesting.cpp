@@ -189,11 +189,11 @@ TEST_F(LSITesting, testIntersectionExists3){
 
 TEST_F(LSITesting, testIntersectionWithSweepLine0){
         ASSERT_THAT(checker,NotNull());
-        Line* sweep = new Line(new Point(1, 1), new Point(4, 4));
+        Line* line1 = new Line(new Point(1, 1), new Point(4, 4));
         Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
         //Intersection at 1,0
         ASSERT_THAT(sSt, NotNull());
-        Point* mInter = checker->calculateIntersection(sweep, line2);
+        Point* mInter = checker->calculateIntersection(line1, line2);
         ASSERT_THAT(mInter, NotNull());
         ASSERT_THAT(2.4f, mInter->getX());
         ASSERT_THAT(2.4f, mInter->getY());
@@ -201,11 +201,11 @@ TEST_F(LSITesting, testIntersectionWithSweepLine0){
 
 TEST_F(LSITesting, testIntersectionWithSweepLine1){
         ASSERT_THAT(checker,NotNull());
-        Line* sweep = new Line(new Point(0, 0), new Point(50, 0));
+        Line* line1 = new Line(new Point(0, 0), new Point(50, 0));
         Line* line2 = new Line(new Point(1, 10), new Point(1, -1));
         //Intersection at 1,0
         ASSERT_THAT(sSt, NotNull());
-        Point* mInter = checker->calculateIntersection(sweep, line2);
+        Point* mInter = checker->calculateIntersection(line1, line2);
         ASSERT_THAT(mInter, NotNull());
         ASSERT_THAT(1, mInter->getX());
         ASSERT_THAT(0, mInter->getY());
@@ -213,11 +213,32 @@ TEST_F(LSITesting, testIntersectionWithSweepLine1){
 
 TEST_F(LSITesting, testIntersectionWithSweepLine2){
         ASSERT_THAT(checker,NotNull());
-        Line* sweep = new Line(new Point(0, 0), new Point(0, 50));
+        Line* line1 = new Line(new Point(0, 0), new Point(0, 50));
         Line* line2 = new Line(new Point(1, 10), new Point(1, -1));
         
-        Point* mInter = checker->calculateIntersection(sweep, line2);
+        Point* mInter = checker->calculateIntersection(line1, line2);
         ASSERT_TRUE(mInter == nullptr);
+     
+}
+
+
+TEST_F(LSITesting, testStatusStructure0){
+        ASSERT_THAT(checker,NotNull());
+        Line* sweepLine = new Line(new Point(1, 1), new Point(4, 4));
+        Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
+        
+        //Intersection at 1,0
+        
+        ASSERT_THAT(sSt, NotNull());
+        ASSERT_THAT(0, sSt->size());
+        //Add one line
+        std::cout << "Sweep line: " << *sweepLine << std::endl;
+        sSt->addLine(line2, sweepLine);
+        ASSERT_THAT(1, sSt->size());
+        sweepLine = new Line(new Point(1, 2), new Point(4, 2));
+        std::cout << "Sweep line: " << *sweepLine << std::endl;
+        sSt->updateIntersections(sweepLine);
+        ASSERT_THAT(1, sSt->size());
      
 }
 
