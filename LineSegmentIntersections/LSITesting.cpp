@@ -8,6 +8,7 @@
 #include "Line.h"
 #include "IntersectionFinder.h"
 #include "IntersectionChecker.h"
+#include "StatusStructure.h"
 
 using::testing::Eq;
 using::testing::NotNull;
@@ -23,6 +24,7 @@ class LSITesting : public testing::Test{
         Integer* myInt = new Integer(10);
         EventPoint* eventPoint = new EventPoint();
         IntersectionChecker* checker = new IntersectionChecker();
+        StatusStructure* sSt = new StatusStructure();
 };
 
 TEST_F(LSITesting, testEventPointNotNull){
@@ -151,7 +153,7 @@ TEST_F(LSITesting, testThreeLines){
         ASSERT_THAT(4,finder->getEventPointsCount());
 }
 
-TEST_F(LSITesting, testIntersections0){
+TEST_F(LSITesting, testIntersectionExists0){
         ASSERT_THAT(checker,NotNull());
         Line* line1 = new Line(new Point(0, 0), new Point(10, 10));
         Line* line2 = new Line(new Point(0, -1), new Point(10, -10));
@@ -160,7 +162,7 @@ TEST_F(LSITesting, testIntersections0){
         ASSERT_FALSE(checker->existIntersection(line2,line1));
 }
 
-TEST_F(LSITesting, testIntersections1){
+TEST_F(LSITesting, testIntersectionExists1){
         ASSERT_THAT(checker,NotNull());
         Line* line1 = new Line(new Point(0, 0), new Point(10, 10));
         Line* line2 = new Line(new Point(0, 10), new Point(10, 0));
@@ -169,7 +171,7 @@ TEST_F(LSITesting, testIntersections1){
         ASSERT_TRUE(checker->existIntersection(line2,line1));
 }
 
-TEST_F(LSITesting, testIntersections2){
+TEST_F(LSITesting, testIntersectionExists2){
         ASSERT_THAT(checker,NotNull());
         Line* line1 = new Line(new Point(0, 0), new Point(0, 10));
         Line* line2 = new Line(new Point(1, 0), new Point(1, 10));
@@ -177,12 +179,46 @@ TEST_F(LSITesting, testIntersections2){
         ASSERT_FALSE(checker->existIntersection(line1,line2));
 }
 
-TEST_F(LSITesting, testIntersections3){
+TEST_F(LSITesting, testIntersectionExists3){
         ASSERT_THAT(checker,NotNull());
         Line* line1 = new Line(new Point(0, 10), new Point(0, 0));
         Line* line2 = new Line(new Point(1, 10), new Point(1, 0));
 
         ASSERT_FALSE(checker->existIntersection(line1,line2));
+}
+
+TEST_F(LSITesting, testIntersectionWithSweepLine0){
+        ASSERT_THAT(checker,NotNull());
+        Line* sweep = new Line(new Point(1, 1), new Point(4, 4));
+        Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
+        //Intersection at 1,0
+        ASSERT_THAT(sSt, NotNull());
+        Point* mInter = checker->calculateIntersection(sweep, line2);
+        ASSERT_THAT(mInter, NotNull());
+        ASSERT_THAT(2.4f, mInter->getX());
+        ASSERT_THAT(2.4f, mInter->getY());
+}
+
+TEST_F(LSITesting, testIntersectionWithSweepLine1){
+        ASSERT_THAT(checker,NotNull());
+        Line* sweep = new Line(new Point(0, 0), new Point(50, 0));
+        Line* line2 = new Line(new Point(1, 10), new Point(1, -1));
+        //Intersection at 1,0
+        ASSERT_THAT(sSt, NotNull());
+        Point* mInter = checker->calculateIntersection(sweep, line2);
+        ASSERT_THAT(mInter, NotNull());
+        ASSERT_THAT(1, mInter->getX());
+        ASSERT_THAT(0, mInter->getY());
+}
+
+TEST_F(LSITesting, testIntersectionWithSweepLine2){
+        ASSERT_THAT(checker,NotNull());
+        Line* sweep = new Line(new Point(0, 0), new Point(0, 50));
+        Line* line2 = new Line(new Point(1, 10), new Point(1, -1));
+        
+        Point* mInter = checker->calculateIntersection(sweep, line2);
+        ASSERT_TRUE(mInter == nullptr);
+     
 }
 
 /*

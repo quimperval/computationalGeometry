@@ -36,6 +36,41 @@ class IntersectionChecker{
 
             return false;
         }
+        
+        Point* calculateIntersection(Line* line1, Line* line2) const{
+            //Considering the first line has the equation A1*x+B1*y = C1
+            //Delta y of line 1 (L1)
+            float deltaYL1 = line1->getP2()->getY() - line1->getP1()->getY();
+            //std::cout<<"deltaYL1: " << deltaYL1 << std::endl;
+            float deltaXL1 = line1->getP1()->getX() - line1->getP2()->getX();
+            //std::cout<<"deltaXL1: " << deltaXL1 << std::endl;
+            float compL1 = deltaYL1*(line1->getP1()->getX())+deltaXL1*(line1->getP1()->getY());
+            //std::cout<<"compL1: " << compL1 << std::endl;
+            //Considering the first line has the equation A1*x+B1*y = C1
+            //Delta y of line 2 (L2)
+            float deltaYL2 = line2->getP2()->getY() - line2->getP1()->getY();
+            //std::cout<<"deltaYL2: " << deltaYL2 << std::endl;
+            float deltaXL2 = line2->getP1()->getX() - line2->getP2()->getX();
+            //std::cout<<"deltaXL2: " << deltaXL2 << std::endl;
+            float compL2 = deltaYL2*(line2->getP1()->getX())+deltaXL2*(line2->getP1()->getY());
+            //std::cout<<"compL2: " << compL2 << std::endl;
+
+            float determinant = deltaYL1*deltaXL2-deltaYL2*deltaXL1;
+
+            if(determinant==0){
+                //std::cout<<"These are parallel lines\n";
+                return nullptr;
+            } else {
+                //std::cout<<"Calculating intersection point\n";
+                float x = ((deltaXL2*compL1) - (deltaXL1*compL2) ) / determinant;
+                float y = ((deltaYL1*compL2) - (deltaYL2*compL1) ) / determinant;
+                Point* p = new Point(x,y);
+                //std::cout << "Returning "<< *p << std::endl;
+                return p;
+            }
+
+            return nullptr;
+        }
 
     private:
         //p1, p2, and p3 are collinear points.
@@ -82,7 +117,7 @@ class IntersectionChecker{
             }
         }
 
-
+        
 
 };
 
