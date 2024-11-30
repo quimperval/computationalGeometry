@@ -115,8 +115,7 @@ std::cerr << "Debug: less than" << std::endl;
     } 
     return false;
 }
-std::ostream& operator<<(std::ostream& os, 
-const EventPoint& e) {
+std::ostream& operator<<(std::ostream& os,const EventPoint& e) {
     os << "(" << e.getX() << ", " 
     << e.getY() << ")";
     return os;

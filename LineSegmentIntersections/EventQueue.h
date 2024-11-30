@@ -95,7 +95,7 @@ class EventQueue{
 
         void printEventPointsOrdered(){
             std::cout << "printEventPointsOrdered\n";
-            auto orderedElements= eventPoints->getInOrderElements();
+            auto orderedElements= eventPoints->getInOrderElementsAsNodes();
             for(auto elem : orderedElements){
                 std::cout << *elem->element() << "\n";
                 //For each event point print the lines starting at
@@ -117,7 +117,7 @@ class EventQueue{
 
         void printEventPointsOrdered() const{
             std::cout << "printEventPointsOrdered\n";
-            auto orderedElements= eventPoints->getInOrderElements();
+            auto orderedElements= eventPoints->getInOrderElementsAsNodes();
             for(auto elem : orderedElements){
                 std::cout << *elem->element() << "\n";
             }
