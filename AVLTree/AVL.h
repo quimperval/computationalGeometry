@@ -240,6 +240,9 @@ class AVL : public Dictionary<Key, E> {
     /*
         HERE START THE PRIVATE SECTION
     */
+        bool isEmpty(){
+            return root==nullptr;
+        }
 
     private:
 
@@ -538,12 +541,16 @@ class AVL : public Dictionary<Key, E> {
             if (rt == nullptr) {
                 return nullptr;
             }
-                AVLNode<Key, E>* temp = rt->right();
-                while (temp->right() != nullptr) {
-                    temp = temp->right();
-                }
-                return temp->element();
+            if(rt->right()==nullptr){
+                //The root is the max
+                return rt->element();
+            } 
+            AVLNode<Key, E>* temp = rt->right();
+            while (temp->right() != nullptr) {
+                temp = temp->right();
             }
+            return temp->element();
+        }
 };
 
 #endif //AVL_TREE_H
