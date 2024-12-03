@@ -122,6 +122,10 @@ class EventQueue{
                 std::cout << *elem->element() << "\n";
             }
         }
+
+        bool isEmpty(){
+            return eventPoints->isEmpty();
+        }
 };
 
 
