@@ -36,6 +36,7 @@ class EventPoint : public Point{
         
         std::unordered_set<Line, LineHash> linesStartingAtEventPoint;
         std::unordered_set<Line, LineHash> linesEndingAtEventPoint;
+        std::unordered_set<Line, LineHash> linesWithEventPointInItsInterior;
     
     public:
         EventPoint():Point(){
@@ -62,6 +63,12 @@ class EventPoint : public Point{
         void addLineToListEndingAtEventPoint(Line* line){
             std::cout << "Adding line " << *line << " to the list of lines ending in this point " << *this << "\n";
             linesEndingAtEventPoint.insert(*line);
+        }
+
+
+        void addLineToListWithEventPointInItsInterior(Line* line){
+            std::cout << "Adding line " << *line << " to the list of lines ending in this point " << *this << "\n";
+            linesWithEventPointInItsInterior.insert(*line);
         }
 
         
