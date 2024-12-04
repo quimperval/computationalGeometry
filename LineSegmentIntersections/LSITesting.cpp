@@ -25,6 +25,7 @@ class LSITesting : public testing::Test{
         EventPoint* eventPoint = new EventPoint();
         IntersectionChecker* checker = new IntersectionChecker();
         StatusStructure* sSt = new StatusStructure();
+        IntersectionFinder finder;
 };
 
 TEST_F(LSITesting, testEventPointNotNull){
@@ -215,10 +216,8 @@ TEST_F(LSITesting, testIntersectionWithSweepLine2){
         ASSERT_THAT(checker,NotNull());
         Line* line1 = new Line(new Point(0, 0), new Point(0, 50));
         Line* line2 = new Line(new Point(1, 10), new Point(1, -1));
-        
         Point* mInter = checker->calculateIntersection(line1, line2);
         ASSERT_TRUE(mInter == nullptr);
-     
 }
 
 
@@ -226,9 +225,7 @@ TEST_F(LSITesting, testStatusStructure0){
         ASSERT_THAT(checker,NotNull());
         Line* sweepLine = new Line(new Point(1, 1), new Point(4, 4));
         Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
-        
         //Intersection at 1,0
-        
         ASSERT_THAT(sSt, NotNull());
         ASSERT_THAT(0, sSt->size());
         //Add one line
@@ -239,7 +236,48 @@ TEST_F(LSITesting, testStatusStructure0){
         std::cout << "Sweep line: " << *sweepLine << std::endl;
         sSt->updateIntersections(sweepLine);
         ASSERT_THAT(1, sSt->size());
-     
+}
+
+TEST_F(LSITesting, testEmtpyEventQueue){
+        std::cout << "#######################################\n";
+        std::cout << "#######################################\n";
+        std::cout << "Testing emtpy event queue\n";
+        std::cout << "#######################################\n";
+        std::cout << "#######################################\n";
+        ASSERT_THAT(checker,NotNull());
+        Line* line1 = new Line(new Point(1, 1), new Point(4, 4));
+        Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
+        std::list intersections = finder.findIntersections();
+        ASSERT_THAT(0, intersections.size());
+}
+
+TEST_F(LSITesting, testIntersections1Line){
+        std::cout << "#######################################\n";
+        std::cout << "#######################################\n";
+        std::cout << "Testing 1 line intersections\n";
+        std::cout << "#######################################\n";
+        std::cout << "#######################################\n";
+        ASSERT_THAT(checker,NotNull());
+        Line* line1 = new Line(new Point(1, 1), new Point(4, 4));
+        Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
+        std::list intersections = finder.findIntersections();
+        finder.addLine(line1);
+        ASSERT_THAT(0, intersections.size());
+}
+
+TEST_F(LSITesting, testIntersections2Lines){
+        std::cout << "#######################################\n";
+        std::cout << "#######################################\n";
+        std::cout << "Testing intersection between 2 lines\n";
+        std::cout << "#######################################\n";
+        std::cout << "#######################################\n";
+        Line* line1 = new Line(new Point(0, 0), new Point(50, 0));
+        Line* line2 = new Line(new Point(1, 10), new Point(1, -1));
+        //Intersection is expected at 1,0        
+        
+        finder.addLine(line1);
+        std::list<Point> intersections = finder.findIntersections();
+        ASSERT_THAT(1, intersections.size());
 }
 
 /*
