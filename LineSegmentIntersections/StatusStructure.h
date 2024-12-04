@@ -13,6 +13,9 @@ class StatusStructure{
         AVL<Point, Line*>* iswl = new AVL<Point, Line*>();
         IntersectionChecker* checker = new IntersectionChecker();
 
+        //Create a set that contains all the lines 
+        //in the status structure
+
     public:
         StatusStructure(){
 
@@ -69,7 +72,16 @@ class StatusStructure{
                 line->setIntersectionwithSweepLine(nullptr);
             }
             
-        } 
+        }
+
+        //Create a method that checks if a Line is stored in the status
+        //structure
+        bool containsLine(Line* l){
+            bool response = false;
+            //If the line is in the set of elements contained in the
+            //status structure
+            return false;
+        }
 
         int size(){
             return iswl->size();
