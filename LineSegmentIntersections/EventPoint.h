@@ -2,7 +2,7 @@
 #define EVENT_POINT_H
 
 #include "point.h"
-#include <bits/stdc++.h>
+#include <bitset>
 #include <unordered_set>
 
 
