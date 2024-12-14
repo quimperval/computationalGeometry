@@ -9,27 +9,9 @@
 //#include "AVL.h"
 #include "Line.h"
 #include <iostream>
+#include "LineHash.h"
 
 class EventPoint : public Point{
-
-    struct LineHash{
-        /**
-         * without the const in this method operator() we would have the below error in compilation:
-         * /usr/include/c++/11/bits/hashtable_policy.h:1217:23: error: 
-         * /usr/include/c++/11/bits/hashtable_policy.h:1217:23: error: static assertion failed: hash function must be invocable with an argument of key type
-         * 1217 |         static_assert(__is_invocable<const _Hash&, const _Key&>{},
-         * 
-         */
-            std::size_t operator()(const Line& l) const {
-                
-                //^ - bitwise xor operator
-                return std::hash<float>()(l.getP1()->getX()) ^
-                    std::hash<float>()(l.getP1()->getX()) ^
-                    std::hash<float>()(l.getP2()->getX()) ^
-                    std::hash<float>()(l.getP2()->getX()) 
-                    ;
-            }
-    };
 
     private: 
         
@@ -71,7 +53,18 @@ class EventPoint : public Point{
             linesWithEventPointInItsInterior.insert(*line);
         }
 
-        
+        std::unordered_set<Line, LineHash> getLinesStartingAt(){
+            return linesStartingAtEventPoint;
+        }
+
+        std::unordered_set<Line, LineHash> getLinesEndingAt(){
+		return linesEndingAtEventPoint;
+	}
+
+	std::unordered_set<Line, LineHash> getLinesWithPointInItsInterior(){
+		return linesWithEventPointInItsInterior;
+	}
+
 
         friend bool operator ==(const EventPoint& e1, const EventPoint& e2);
         friend bool operator >(const EventPoint& e1, const EventPoint& e2);
