@@ -4,6 +4,7 @@
 #include "AVL.h"
 #include "EventQueue.h"
 #include "StatusStructure.h"
+#include "point.h"
 
 class IntersectionFinder{
     private:
@@ -12,7 +13,6 @@ class IntersectionFinder{
         StatusStructure* statusStr=nullptr;
         Point* minX = nullptr;
         Point* maxX = nullptr;
-    
     public:
 
         IntersectionFinder(){
@@ -78,12 +78,16 @@ class IntersectionFinder{
                 if(p==nullptr){
                     std::cout << "unhandle case for nullpointer\n";
                     continue;
-                } 
+                }
+
                 std::cout << "Next point not null\n";
                 //std::cout << nextPoint->elem();
-                 
+        	std::cout << "**********" << std::endl;
+		std::cout << "Processing point " << *p << std::endl;
+
+		std::cout << "**********" << std::endl;
                 //handle event point
-                handleEventPoint();
+                handleEventPoint(p);
                 
                 
             }
@@ -96,21 +100,47 @@ class IntersectionFinder{
 
     private:
         void handleEventPoint(EventPoint* p){
-            //Get the segments whose upper endpoint is p
 
             //Find all segments stored in the status structure
             //that contain p
+	    //U(p)
+	    //Get the segments whose upper endpoint is p
+            auto Up = p->getLinesStartingAt(); 
+	    std::cout << "Count of lines starting at: " << Up.size() << std::endl;
 
             //L(p) the subset of segments found whose 
             //lower endpoint is p
+	    auto Lp = p->getLinesEndingAt();
+	    std::cout << "Count of lines ending at: " << Lp.size() << std::endl;
 
             //C(p) the subset of segments found that contain
             //in their interior
+	    auto Cp = p->getLinesWithPointInItsInterior();
+            std::cout << "Count of lines with P in its interior: " << Cp.size() << std::endl;
 
             //Get the union of L(p), U(p), C(p)
+	    //i.e. the lines that are on the three sets
+	   std::unordered_set<Line, LineHash> unionLpUpCp;
+	   for(auto l : Up){
+               std::cout << "Checking line " << l << std::endl;
+	       unionLpUpCp.insert(l);
+	   }
+           for(auto l : Lp){
+               unionLpUpCp.insert(l);
+	   }
+
+	   for(auto l : Cp){
+               unionLpUpCp.insert(l);
+	    }
+
+            std::cout << "Size of unionLpLpCp is: " << unionLpUpCp.size() << std::endl;
             //If the union contains more than one segment
+	    if(unionLpUpCp.size()>1){
+
+
                 //Then report p as an intersection, together with L(p), 
                 //U(p) and C(p)
+	    }
             
             //Delete the segments in L(p) union C(p) from 
             //the status structure
@@ -122,7 +152,7 @@ class IntersectionFinder{
 
             //If the union of U(p) and C(p) is the empty set
                 //Then let sj and sr be the left and right neighbors of p 
-                //in the status structure.
+               //in the status structure.
                     //Execute the FindNewEvents(sl, sr, p)
                 //Else: Let s' be the leftmost segment of U(p) union C(p) 
                 //in the status structure
