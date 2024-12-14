@@ -5,6 +5,8 @@
 #include "point.h"
 #include "Line.h"
 #include "IntersectionChecker.h"
+#include <unordered_set>
+#include <list>
 
 class StatusStructure{
     
@@ -13,8 +15,21 @@ class StatusStructure{
         AVL<Point, Line*>* iswl = new AVL<Point, Line*>();
         IntersectionChecker* checker = new IntersectionChecker();
 
-        //Create a set that contains all the lines 
+        //Get a set that contains all the lines 
         //in the status structure
+	std::unordered_set<Line, LineHash> getContent(){
+            std::unordered_set<Line, LineHash> response;
+	    if(iswl->isEmpty()){
+	        return response;
+	    }
+	    std::list mContent = iswl->getInOrderElements();
+	    std::cout << "content size of iswl: " << mContent.size();
+	    for( auto l : mContent){
+	        response.insert(*l);
+	    }
+
+	    return response;
+	}
 
     public:
         StatusStructure(){
@@ -80,6 +95,10 @@ class StatusStructure{
             bool response = false;
             //If the line is in the set of elements contained in the
             //status structure
+	    std::unordered_set<Line, LineHash> content = getContent();
+            if( auto search= content.find(*l); search!=content.end()){
+                std::cout << *l << " is in the status strucrure\n";
+	    }
             return false;
         }
 
