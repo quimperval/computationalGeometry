@@ -189,17 +189,16 @@ TEST_F(LSITesting, testIntersectionExists3){
 }
 
 TEST_F(LSITesting, testIntersectionWithSweepLine0){
-	std::cout << "testIntersectionWithSweepLine0\n";
+	//std::cout << "testIntersectionWithSweepLine0\n";
 	ASSERT_THAT(checker,NotNull());
         Line* line1 = new Line(new Point(1, 1), new Point(4, 4));
         Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
         //Intersection at 1,0
         ASSERT_THAT(sSt, NotNull());
         Point* mInter = checker->calculateIntersection(line1, line2);
-	std::cout << mInter << std::endl;
-        ASSERT_THAT(mInter, NotNull());
-        ASSERT_THAT(2.4f, mInter->getX());
-        ASSERT_THAT(2.4f, mInter->getY());
+	//std::cout << mInter << std::endl;
+        ASSERT_TRUE(mInter == nullptr);
+        
 }
 
 TEST_F(LSITesting, testIntersectionWithSweepLine1){
