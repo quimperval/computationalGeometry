@@ -121,16 +121,22 @@ class IntersectionFinder{
             //Get the union of L(p), U(p), C(p)
 	    //i.e. the lines that are on the three sets
 	   std::unordered_set<Line, LineHash> unionLpUpCp;
+	   std::unordered_set<Line, LineHash> unionLpCp;
+	   std::unordered_set<Line, LineHash> unionUpCp;
 	   for(auto l : Up){
                std::cout << "Checking line " << l << std::endl;
 	       unionLpUpCp.insert(l);
+	       unionUpCp.insert(l);
 	   }
            for(auto l : Lp){
                unionLpUpCp.insert(l);
+	       unionLpCp.insert(l);
 	   }
 
 	   for(auto l : Cp){
                unionLpUpCp.insert(l);
+	       unionLpCp.insert(l);
+	       unionUpCp.insert(l);
 	    }
 
             std::cout << "Size of unionLpLpCp is: " << unionLpUpCp.size() << std::endl;
@@ -141,15 +147,24 @@ class IntersectionFinder{
                 //Then report p as an intersection, together with L(p), 
                 //U(p) and C(p)
 	    }
-            
+           for(auto elem : unionLpCp)
+	   {
             //Delete the segments in L(p) union C(p) from 
             //the status structure
+	   }
+
+	   for(auto elem : unionUpCp)
+	   {
+            //personal comment: first remove them from the status structure, and then reinsert.
 
             //Insert the seguments that exist in the union of
             //U(p) and C(p) into the status structure, for this is necessary 
             //the sweep line
             //Deleting and re-inserting the segments of C(p) reverses their order
+            }
 
+	   if(unionUpCp.size()==0)
+	    {
             //If the union of U(p) and C(p) is the empty set
                 //Then let sj and sr be the left and right neighbors of p 
                //in the status structure.
@@ -163,7 +178,7 @@ class IntersectionFinder{
                     //Let sr be the right neighbor of s'' in the status structure
                     //Execute FindNewEvents(s'', sr, p)
 
-
+            }
         }
         
 };

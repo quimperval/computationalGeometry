@@ -13,6 +13,8 @@ class StatusStructure{
     private:
         //iswl: Intersections With Sweep Line
         AVL<Point, Line*>* iswl = new AVL<Point, Line*>();
+	AVL<Line, Point*>* mirror = new AVL<Line, Point*>();
+
         IntersectionChecker* checker = new IntersectionChecker();
 
         //Get a set that contains all the lines 
@@ -40,8 +42,14 @@ class StatusStructure{
             //delete iswl;
             //delete checker;
         }
+        
+	int getMirrorSize()
+        {
+            return mirror->size();
+	}
 
         void updateIntersections(Line* sweepLine){
+	    std::cout << "@@@@@@@@@@@\n";
             //Use the sweep line to calculate the intersections with the
             //first get the content of the iswl
             std::cout << "Getting in order elements \n";
@@ -55,11 +63,15 @@ class StatusStructure{
             //for each element that was previously retrieved 
             //calculate the intersection point
             //with the sweep line
-            std::cout << "elements: " << elements.size() << std::endl;
+            std::cout << "*****************\n";
+	    std::cout << "elements: " << elements.size() << std::endl;
             std::cout << "Iterating over all elements \n";
+            std::cout << "*****************\n";
+            std::cout << "*****************\n";
             
             for(Line* line : elements){
-                std::cout << *line << std::endl;
+                std::cout << "checking: " << *line << std::endl;
+		std::cout << "The sweep line is: " << *sweepLine << std::endl;
                 addLine(line, sweepLine);
             }
         }
@@ -83,6 +95,7 @@ class StatusStructure{
                 line->setIntersectionwithSweepLine(intersection);
                 std::cout << "Adding line "<< *line << " that intersects at " << *intersection << std::endl;
                 iswl->insert(*intersection, line);
+		mirror->insert(*line, intersection);
             } else {
                 line->setIntersectionwithSweepLine(nullptr);
             }

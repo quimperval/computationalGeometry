@@ -189,12 +189,14 @@ TEST_F(LSITesting, testIntersectionExists3){
 }
 
 TEST_F(LSITesting, testIntersectionWithSweepLine0){
-        ASSERT_THAT(checker,NotNull());
+	std::cout << "testIntersectionWithSweepLine0\n";
+	ASSERT_THAT(checker,NotNull());
         Line* line1 = new Line(new Point(1, 1), new Point(4, 4));
         Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
         //Intersection at 1,0
         ASSERT_THAT(sSt, NotNull());
         Point* mInter = checker->calculateIntersection(line1, line2);
+	std::cout << mInter << std::endl;
         ASSERT_THAT(mInter, NotNull());
         ASSERT_THAT(2.4f, mInter->getX());
         ASSERT_THAT(2.4f, mInter->getY());
@@ -221,6 +223,16 @@ TEST_F(LSITesting, testIntersectionWithSweepLine2){
 }
 
 
+TEST_F(LSITesting, testIntersectionWithSweepLine3){
+        Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
+	Line* swp2 = new Line(new Point(0,1), new Point(6,0));
+
+	Point* mInter = checker->calculateIntersection(line2, swp2);
+        std::cout << "mInter: " << *mInter << std::endl;
+        ASSERT_TRUE(mInter == nullptr);
+}
+
+
 TEST_F(LSITesting, testStatusStructure0){
         ASSERT_THAT(checker,NotNull());
         Line* sweepLine = new Line(new Point(1, 1), new Point(4, 4));
@@ -232,10 +244,14 @@ TEST_F(LSITesting, testStatusStructure0){
         std::cout << "Sweep line: " << *sweepLine << std::endl;
         sSt->addLine(line2, sweepLine);
         ASSERT_THAT(1, sSt->size());
+	ASSERT_THAT(1, sSt->getMirrorSize());
         sweepLine = new Line(new Point(1, 2), new Point(4, 2));
         std::cout << "Sweep line: " << *sweepLine << std::endl;
         sSt->updateIntersections(sweepLine);
         ASSERT_THAT(1, sSt->size());
+	Line* swp2 = new Line(new Point(0,1), new Point(6,0));
+	sSt->updateIntersections(swp2);
+	ASSERT_THAT(0, sSt->size());
 }
 
 TEST_F(LSITesting, testEmtpyEventQueue){

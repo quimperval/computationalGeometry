@@ -1,6 +1,8 @@
 #ifndef INTERSECTION_CHECKER_H
 #define INTERSECTION_CHECKER_H
 
+#include "iostream"
+#include "cmath"
 #include "Line.h"
 
 class IntersectionChecker{
@@ -37,40 +39,39 @@ class IntersectionChecker{
             return false;
         }
         
-        Point* calculateIntersection(Line* line1, Line* line2) const{
-            //Considering the first line has the equation A1*x+B1*y = C1
-            //Delta y of line 1 (L1)
-            float deltaYL1 = line1->getP2()->getY() - line1->getP1()->getY();
-            //std::cout<<"deltaYL1: " << deltaYL1 << std::endl;
-            float deltaXL1 = line1->getP1()->getX() - line1->getP2()->getX();
-            //std::cout<<"deltaXL1: " << deltaXL1 << std::endl;
-            float compL1 = deltaYL1*(line1->getP1()->getX())+deltaXL1*(line1->getP1()->getY());
-            //std::cout<<"compL1: " << compL1 << std::endl;
-            //Considering the first line has the equation A1*x+B1*y = C1
-            //Delta y of line 2 (L2)
-            float deltaYL2 = line2->getP2()->getY() - line2->getP1()->getY();
-            //std::cout<<"deltaYL2: " << deltaYL2 << std::endl;
-            float deltaXL2 = line2->getP1()->getX() - line2->getP2()->getX();
-            //std::cout<<"deltaXL2: " << deltaXL2 << std::endl;
-            float compL2 = deltaYL2*(line2->getP1()->getX())+deltaXL2*(line2->getP1()->getY());
-            //std::cout<<"compL2: " << compL2 << std::endl;
+Point* calculateIntersection(Line* line1, Line* line2) const {
+    float deltaYL1 = line1->getP2()->getY() - line1->getP1()->getY();
+    float deltaXL1 = line1->getP1()->getX() - line1->getP2()->getX();
+    float compL1 = deltaYL1 * (line1->getP1()->getX()) + deltaXL1 * (line1->getP1()->getY());
 
-            float determinant = deltaYL1*deltaXL2-deltaYL2*deltaXL1;
+    float deltaYL2 = line2->getP2()->getY() - line2->getP1()->getY();
+    float deltaXL2 = line2->getP1()->getX() - line2->getP2()->getX();
+    float compL2 = deltaYL2 * (line2->getP1()->getX()) + deltaXL2 * (line2->getP1()->getY());
 
-            if(determinant==0){
-                //std::cout<<"These are parallel lines\n";
-                return nullptr;
-            } else {
-                //std::cout<<"Calculating intersection point\n";
-                float x = ((deltaXL2*compL1) - (deltaXL1*compL2) ) / determinant;
-                float y = ((deltaYL1*compL2) - (deltaYL2*compL1) ) / determinant;
-                Point* p = new Point(x,y);
-                //std::cout << "Returning "<< *p << std::endl;
-                return p;
-            }
+    float determinant = deltaYL1 * deltaXL2 - deltaYL2 * deltaXL1;
+    const float EPSILON = 1e-6;
+    if (fabs(determinant) < EPSILON) {
+        // These are parallel lines
+	    std::cout << "these are parallel lines \n";
+        return nullptr;
+    } else {
+        // Calculate intersection point
+        float x = ((deltaXL2 * compL1) - (deltaXL1 * compL2)) / determinant;
+        float y = ((deltaYL1 * compL2) - (deltaYL2 * compL1)) / determinant;
+        Point* intersection = new Point(x, y);
 
+        // Check if the intersection point lies on both segments
+        if (liesOnSegment(line1->getP1(), intersection, line1->getP2()) &&
+            liesOnSegment(line2->getP1(), intersection, line2->getP2())) {
+            return intersection;
+        } else {
+	    std::cout << "returning null\n";
+            delete intersection;
             return nullptr;
         }
+    }
+}
+
 
     private:
         //p1, p2, and p3 are collinear points.
@@ -82,7 +83,7 @@ class IntersectionChecker{
 
             bool condition3 = p2->getY()<=maxValue(p1->getY(), p3->getY());
 
-            bool condition4 = p2->getX()>=minValue(p1->getY(), p3->getY());
+            bool condition4 = p2->getY()>=minValue(p1->getY(), p3->getY());
            
 
             if(condition1 && condition2 && condition3 && condition4){
