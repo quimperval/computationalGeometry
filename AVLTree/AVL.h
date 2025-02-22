@@ -33,11 +33,11 @@ class AVL : public Dictionary<Key, E> {
         //k - Key value of the item
         //e - The item to insert
         void insert(const Key& k, const E& e){
-            std::cout <<"************************\n" ;
-            std::cout <<"*******INSERTING*******\n" ;
-            std::cout <<"************************\n" ;
-            std::cout << "key: "<< k << std::endl;
-            std::cout << "value: "<< *e << std::endl;
+            //std::cout <<"************************\n" ;
+            //std::cout <<"*******INSERTING*******\n" ;
+            //std::cout <<"************************\n" ;
+            //std::cout << "key: "<< k << std::endl;
+            //std::cout << "value: "<< *e << std::endl;
             root = insertHelp(root, k, e);
             nodecount++;
         }
@@ -107,7 +107,7 @@ class AVL : public Dictionary<Key, E> {
         //pop removes the top value from the stack
         //top returns the top value from the stack, but it does not
         std::list<AVLNode<Key, E>*> getInOrderElementsAsNodes(){
-            std::cout << "getInOrderElementsAsNodes\n";
+            //std::cout << "getInOrderElementsAsNodes\n";
             if(root==nullptr){
                 //Doing nothing because the tree is empty
                 std::cout << "Doing nothign, the tree is empty\n";
@@ -173,19 +173,19 @@ class AVL : public Dictionary<Key, E> {
         }
 
         std::list<E> getInOrderElements(){
-            std::cout << "getInOrderElements\n";
+            //std::cout << "getInOrderElements\n";
             if(root==nullptr){
                 //Doing nothing because the tree is empty
-                std::cout << "Doing nothign, the tree is empty\n";
+                //std::cout << "Doing nothign, the tree is empty\n";
                 return std::list<E>(); // Return an empty stack
             }
             std::list<E> response;
             std::stack<AVLNode<Key, E>*> mStack;
             int counter =0;
-            std::cout << "My Size: " << size() << std::endl;
-            std::cout << "Adding root to the stack\n";
+            //std::cout << "My Size: " << size() << std::endl;
+            //std::cout << "Adding root to the stack\n";
             mStack.push(root);
-            std::cout << "root: " << root << std::endl;
+            //std::cout << "root: " << root << std::endl;
             while(!mStack.empty()){
                 //std::cout << "##############################";
                 //std::cout << "###### step "<< counter << "\n";
@@ -244,6 +244,16 @@ class AVL : public Dictionary<Key, E> {
             return root==nullptr;
         }
 
+	E getSuccesorValue(const Key& k)
+	{
+            return getSuccesorHelp(root,k);    
+	}
+
+	E getPredecessorValue(const Key& k)
+	{
+            return getPredecessorHelp(root, k);
+	}
+
     private:
 
         
@@ -293,11 +303,11 @@ class AVL : public Dictionary<Key, E> {
             } else {
                 rt->setHeight(1+rightHeight);
             }
-            std::cout << "Printing before Rebalancing \n";
+            //std::cout << "Printing before Rebalancing \n";
             print();
 
             int balance = getBalance(rt);
-            std::cout << "Balance: " << balance << " \n";
+            //std::cout << "Balance: " << balance << " \n";
             //Left Left case
             if(balance > 1 && k< rt->left()->key()){
                 std::cout << "Left left case \n";
@@ -336,7 +346,7 @@ class AVL : public Dictionary<Key, E> {
         }
 
         AVLNode<Key, E>* rightRotate(AVLNode<Key, E>* node){
-            std::cout << "rightRotate \n";
+            //std::cout << "rightRotate \n";
             AVLNode<Key, E>* x = node->left();
             AVLNode<Key, E>* T2 = x->right();
             //Do rotation
@@ -418,24 +428,24 @@ class AVL : public Dictionary<Key, E> {
             } else {
                 //Root is the element we're deleting. 
                 if(rt->isLeaf()==true){
-                    std::cout << "Is leaf, returning rt" << "\n";
+                    //std::cout << "Is leaf, returning rt" << "\n";
                     delete rt;
                     return nullptr;
                 } else if(rt->left()==nullptr){
                     //return the right as the root
-                    std::cout << "Returning right as left is null \n";
+                    //std::cout << "Returning right as left is null \n";
                     AVLNode<Key, E>* temp = rt->right();
                     delete rt;
                     return temp;
                 } else if(rt->right()==nullptr){
                     //return the right as the root
-                    std::cout << "Returning left as right is null \n";
+                    //std::cout << "Returning left as right is null \n";
                     AVLNode<Key, E>* temp = rt->left();
                     delete rt;
                     return temp;
                 } else {
                      // Find in-order successor (smallest in the right subtree)
-                    std::cout << "Finding in order successor \n";
+                    //std::cout << "Finding in order successor \n";
                     AVLNode<Key, E>* temp = rt->right();
                     while (temp->left() != nullptr) {
                         temp = temp->left();
@@ -457,11 +467,11 @@ class AVL : public Dictionary<Key, E> {
             } else {
                 rt->setHeight(1+rightHeight);
             }
-            std::cout << "Printing before Rebalancing \n";
+            //std::cout << "Printing before Rebalancing \n";
             print();
 
             int balance = getBalance(rt);
-            std::cout << "Balance: " << balance << " \n";
+            //std::cout << "Balance: " << balance << " \n";
             //Left Left case
             if(balance > 1 && k< rt->left()->key()){
                 std::cout << "Left left case \n";
@@ -507,8 +517,57 @@ class AVL : public Dictionary<Key, E> {
                 //Found it
                 return rt->element();
             }
-        }
-        
+        } 
+
+        E getPredecessorHelp(AVLNode<Key,E>* rt, const Key& k)
+	{
+            AVLNode<Key,E>* searchedNode = nullptr;
+	    while(rt)
+	    {
+                if(k<rt->key())
+		{
+                    searchedNode = rt;
+		    rt = rt->right();
+		}else
+		{
+                    rt = rt->left();
+		}
+	    }
+
+	    if(searchedNode!=nullptr)
+	    {
+                return searchedNode->element();
+	    }
+
+	    return nullptr;
+
+
+	}
+
+
+        E getSuccesorHelp(AVLNode<Key,E>* rt, const Key& k)
+	{
+            AVLNode<Key,E>* searchedNode = nullptr;
+
+            while(rt){
+                if(k<rt->key())
+		{
+                    searchedNode= rt;
+		    rt = rt->left();
+		}else
+		{
+                    rt = rt->right();
+		}
+	    }
+
+	    if(searchedNode!=nullptr)
+	    {
+                return searchedNode->element();
+	    }
+            return nullptr;
+
+	}
+
         void printhelp(
             AVLNode<Key, E>* rt, 
             int level) {
