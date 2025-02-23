@@ -244,12 +244,12 @@ class AVL : public Dictionary<Key, E> {
             return root==nullptr;
         }
 
-	E getSuccesorValue(const Key& k)
+	E getSuccesor(const Key& k)
 	{
             return getSuccesorHelp(root,k);    
 	}
 
-	E getPredecessorValue(const Key& k)
+	E getPredecessor(const Key& k)
 	{
             return getPredecessorHelp(root, k);
 	}
@@ -524,7 +524,7 @@ class AVL : public Dictionary<Key, E> {
             AVLNode<Key,E>* searchedNode = nullptr;
 	    while(rt)
 	    {
-                if(k<rt->key())
+                if(k>rt->key())
 		{
                     searchedNode = rt;
 		    rt = rt->right();

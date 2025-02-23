@@ -82,11 +82,42 @@ TEST_F(AVLTesting, testEventPointGreaterThanTrue){
     }
     ASSERT_THAT(7, mStack.size());
 }
-/*
-TEST_F(LSITesting, testEventPointGreaterThanFalse){
-        ASSERT_THAT(eventPoint,NotNull());
-}
 
+TEST_F(AVLTesting, testGetSuccessor){
+	std::cout << "Testing getSuccesor\n";
+	Integer* five = new Integer(5);
+	Integer* six = new Integer(6);
+	Integer* four = new Integer(4);
+
+	AVL<int, Integer*>* avl = new AVL<int, Integer*>();
+        avl->insert(five->getValue(), five);
+	avl->insert(four->getValue(), four);
+	avl->insert(six->getValue(), six);
+        ASSERT_THAT(3,avl->size());
+	auto succesor = avl->getSuccesor(five->getValue());
+	if(succesor==nullptr)
+	{
+            std::cout<< "Succesor is null\n";
+
+	}else {
+            std::cout << "Succesor is: "<< succesor->getValue() << std::endl;
+	}
+
+	ASSERT_THAT(6, succesor->getValue());
+        avl->print();
+	auto predecesor  = avl->getPredecessor(five->getValue());
+
+	if(predecesor== nullptr)
+	{
+	    std::cout << "Predecesor is null"<< std::endl;
+	}else
+	{
+            std::cout << "Predecesor: " << predecesor->getValue() << std::endl ;
+	}
+
+
+}
+/*
 TEST_F(LSITesting, testEventPointLessThanTrue){
         ASSERT_THAT(eventPoint,NotNull());
 }
