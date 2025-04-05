@@ -9,16 +9,16 @@
 //#include "AVL.h"
 #include "Line.h"
 #include <iostream>
-#include "LineHash.h"
-
+#include "LinePtrHash.h"
+#include "LinePtrEqual.h"
 class EventPoint : public Point{
 
     private: 
         
         
-        std::unordered_set<Line, LineHash> linesStartingAtEventPoint;
-        std::unordered_set<Line, LineHash> linesEndingAtEventPoint;
-        std::unordered_set<Line, LineHash> linesWithEventPointInItsInterior;
+        std::unordered_set<std::shared_ptr<Line>, LinePtrHash, LinePtrEqual> linesStartingAtEventPoint;
+        std::unordered_set<std::shared_ptr<Line>, LinePtrHash, LinePtrEqual> linesEndingAtEventPoint;
+        std::unordered_set<std::shared_ptr<Line>, LinePtrHash, LinePtrEqual> linesWithEventPointInItsInterior;
     
     public:
         EventPoint():Point(){
@@ -30,38 +30,41 @@ class EventPoint : public Point{
         }
         
         EventPoint(Point& p ):Point(p.getX(), p.getY()){
-           std::cout << "Initializing event point\n";
+           //std::cout << "Initializing event point\n";
         }
         
         ~EventPoint(){
             
         }
 
-        void addLineToListStartingAtEventPoint(Line* line){
-            std::cout << "Adding line " << *line << " to the list of lines starting in this point " << *this << "\n";
-            linesStartingAtEventPoint.insert(*line);
+        void addLineToListStartingAtEventPoint(Line& line){
+            //std::cout << "Adding line " << *line << " to the list of lines starting in this point " << *this << "\n";
+            auto l = std::make_shared<Line>(line);
+            linesStartingAtEventPoint.insert(l);
         }
 
-        void addLineToListEndingAtEventPoint(Line* line){
-            std::cout << "Adding line " << *line << " to the list of lines ending in this point " << *this << "\n";
-            linesEndingAtEventPoint.insert(*line);
+        void addLineToListEndingAtEventPoint(Line& line){
+            //std::cout << "Adding line " << *line << " to the list of lines ending in this point " << *this << "\n";
+            auto l = std::make_shared<Line>(line);
+	    linesEndingAtEventPoint.insert(l);
         }
 
 
-        void addLineToListWithEventPointInItsInterior(Line* line){
-            std::cout << "Adding line " << *line << " to the list of lines ending in this point " << *this << "\n";
-            linesWithEventPointInItsInterior.insert(*line);
+        void addLineToListWithEventPointInItsInterior(Line& line){
+            //std::cout << "Adding line " << *line << " to the list of lines ending in this point " << *this << "\n";
+	    auto l = std::make_shared<Line>(line);
+            linesWithEventPointInItsInterior.insert(l);
         }
 
-        std::unordered_set<Line, LineHash> getLinesStartingAt(){
+        std::unordered_set<std::shared_ptr<Line>, LinePtrHash, LinePtrEqual> getLinesStartingAt(){
             return linesStartingAtEventPoint;
         }
 
-        std::unordered_set<Line, LineHash> getLinesEndingAt(){
+        std::unordered_set<std::shared_ptr<Line>, LinePtrHash, LinePtrEqual> getLinesEndingAt(){
 		return linesEndingAtEventPoint;
 	}
 
-	std::unordered_set<Line, LineHash> getLinesWithPointInItsInterior(){
+	std::unordered_set<std::shared_ptr<Line>, LinePtrHash, LinePtrEqual> getLinesWithPointInItsInterior(){
 		return linesWithEventPointInItsInterior;
 	}
 
@@ -105,7 +108,7 @@ bool operator>(const EventPoint& e1, const EventPoint& e2){
 }
 
 bool operator<(const EventPoint& e1, const EventPoint& e2){
-std::cerr << "Debug: less than" << std::endl;
+    //std::out << "Debug: less than" << std::endl;
     if(e1.getY()<e2.getY()){
         return true;
     } else if (e1.getY()==e2.getY()){

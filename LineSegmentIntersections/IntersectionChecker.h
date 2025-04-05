@@ -8,8 +8,59 @@
 class IntersectionChecker{
 
     public:
+	//returns true if the point is above the line, 
+	//returns false if the point is on the line or below
+	bool isPointBelowLine(std::shared_ptr<Point> p, std::shared_ptr<Line> l)
+	{
 
-        bool existIntersection(Line* l1, Line* l2) const {
+	      auto dX = l->getP2()->getX()-l->getP1()->getX();
+	      auto dY = l->getP2()->getY()-l->getP1()->getY();
+	      //rect equation: y=mx+b
+	      auto m = dY/dX;
+              //resolving b
+	      //b = y - mx
+	      auto b = l->getP1()->getY() - m* l->getP1()->getX();
+	     //now get the x from the point we want to check
+	     auto y = m*p->getX()+b;
+             auto diff = y-p->getY();
+	     if(diff<0)
+	     {
+                 diff = -1*diff;
+	     }
+
+	     if(p->getY()< y)
+	     {
+                 return true;
+	     }
+
+	     return false;
+	}
+
+        bool isPointInLine(std::shared_ptr<Point> p, std::shared_ptr<Line> l)
+        {
+              auto dX = l->getP2()->getX()-l->getP1()->getX();
+	      auto dY = l->getP2()->getY()-l->getP1()->getY();
+	      //rect equation: y=mx+b
+	      auto m = dY/dX;
+              //resolving b
+	      //b = y - mx
+	      auto b = l->getP1()->getY() - m* l->getP1()->getX();
+	     //now get the x from the point we want to check
+	     auto y = m*p->getX()+b;
+             auto diff = y-p->getY();
+	     if(diff<0)
+	     {
+                 diff = -1*diff;
+	     }
+
+	     if(p->getY()==y || diff < 0.001)
+	     {
+                 return true;
+	     } 
+
+	     return false;
+	}
+        bool existIntersection(std::shared_ptr<Line> l1, std::shared_ptr<Line> l2) const {
             
             int mOrient1 = getOrientation(l1->getP1(), l1->getP2(), l2->getP1());
             int mOrient2 = getOrientation(l1->getP1(), l1->getP2(), l2->getP2());
@@ -39,7 +90,7 @@ class IntersectionChecker{
             return false;
         }
         
-Point* calculateIntersection(Line* line1, Line* line2) const {
+	std::shared_ptr<Point> calculateIntersection(std::shared_ptr<Line> line1, std::shared_ptr<Line> line2) const {
     float deltaYL1 = line1->getP2()->getY() - line1->getP1()->getY();
     float deltaXL1 = line1->getP1()->getX() - line1->getP2()->getX();
     float compL1 = deltaYL1 * (line1->getP1()->getX()) + deltaXL1 * (line1->getP1()->getY());
@@ -52,14 +103,14 @@ Point* calculateIntersection(Line* line1, Line* line2) const {
     
     if (fabs(determinant) < EPSILON) {
         // These are parallel lines
-	    std::cout << "these are parallel lines \n";
+	    //std::cout << "these are parallel lines \n";
         return nullptr;
     } else {
         // Calculate intersection point
         float x = ((deltaXL2 * compL1) - (deltaXL1 * compL2)) / determinant;
         float y = ((deltaYL1 * compL2) - (deltaYL2 * compL1)) / determinant;
         
-	Point* intersection = new Point(x, y);
+	std::shared_ptr<Point> intersection = std::make_shared<Point>( Point(x, y));
         //std::cout << "Checking if point "<< *intersection << " lines on both lines" << std::endl;
         // Check if the intersection point lies on both segments
         if (liesOnSegment(line1->getP1(), intersection, line1->getP2()) &&
@@ -67,7 +118,7 @@ Point* calculateIntersection(Line* line1, Line* line2) const {
             return intersection;
         } else {
 	    //std::cout << "returning null\n";
-            delete intersection;
+            
             return nullptr;
         }
     }
@@ -78,7 +129,7 @@ Point* calculateIntersection(Line* line1, Line* line2) const {
         const float EPSILON = 1e-6;
         //p1, p2, and p3 are collinear points.
         //Check if p2 lies on the segment p1-p3
-        bool liesOnSegment(Point* p1, Point* p2, Point* p3) const{
+        bool liesOnSegment(std::shared_ptr<Point> p1, std::shared_ptr<Point> p2, std::shared_ptr<Point> p3) const{
     //std::cout << "Checking if point " << *p2 << " lies in linw dwfined.by " << *p1 << " and " << *p3 << std::endl;
     bool condition1 = p2->getX() < minValue(p1->getX(), p3->getX()) - EPSILON;
     //std::cout << "condition 1 (p2->getX() < minValue(p1->getX(), p3->getX()) - EPSILON) is " << condition1 << std::endl;
@@ -109,7 +160,7 @@ Point* calculateIntersection(Line* line1, Line* line2) const {
     return true;
         }
 
-        int getOrientation(Point* p1, Point* p2, Point* p3) const{
+        int getOrientation(std::shared_ptr<Point> p1, std::shared_ptr<Point> p2, std::shared_ptr<Point> p3) const{
             int response = (p2->getY() - p1->getY()) *(p3->getX()-p2->getX()) - 
                         (p2->getX()-p1->getX()) * (p3->getY()-p2->getY());
             if(response==0){

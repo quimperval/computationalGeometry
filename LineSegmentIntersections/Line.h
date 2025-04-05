@@ -1,6 +1,7 @@
 #ifndef LINE_H
 #define LINE_H
 
+#include <memory>
 #include "point.h"
 
 class Line{
@@ -12,28 +13,28 @@ class Line{
 
         }
 
-        Line(Point* p1, Point* p2): p1(p1), p2(p2){
+        Line(std::shared_ptr<Point> p1, std::shared_ptr<Point> p2): p1(p1), p2(p2){
 
         }
 
         ~Line(){
-            
+           std::cout << "Line being destroyed\n";    
         }
 
-        Point* getP1() const{
+	std::shared_ptr<Point> getP1() const{
             return p1;
         }
 
-        Point* getP2() const{
+	std::shared_ptr<Point> getP2() const{
             return p2;
         }
 
-        Point* getIntersectionwithSweepLine(){
+	std::shared_ptr<Point> getIntersectionwithSweepLine(){
             //TO-DO
-            return nullptr;
+            return intersectionWithSweepLine;
         }
 
-        void setIntersectionwithSweepLine(Point* intersection){
+        void setIntersectionwithSweepLine(std::shared_ptr<Point> intersection){
             //TO-DO
             intersectionWithSweepLine = intersection;
         }
@@ -45,9 +46,9 @@ class Line{
         
 
     private:
-        Point* p1 = nullptr;
-        Point* p2= nullptr;
-        Point* intersectionWithSweepLine = nullptr;
+	std::shared_ptr<Point> p1 = nullptr;
+	std::shared_ptr<Point> p2= nullptr;
+	std::shared_ptr<Point> intersectionWithSweepLine = nullptr;
 
     friend bool operator==(const Line& line1, const Line& line2);
 };
