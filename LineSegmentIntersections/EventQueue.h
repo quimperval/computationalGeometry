@@ -8,7 +8,7 @@
 
 class EventQueue{
     private: 
-	std::map<Point, std::shared_ptr<EventPoint>> eventPoints;
+	std::map<EventPoint, std::shared_ptr<EventPoint>> eventPoints;
         float minX = 0;
 	float maxX = 0;
     public: 
@@ -21,13 +21,13 @@ class EventQueue{
         
         bool insertEvent(std::shared_ptr<EventPoint> ep){
             //TODO
-		std::cout << "insert Event is not yet implemented" << std::endl;
 
-	    Point p (ep->getX(), ep->getY());
-	    auto it = eventPoints.find(p);
+	    EventPoint k = *ep;
+	    auto it = eventPoints.find(k);
 	    if(it == eventPoints.end())
 	    {
-                eventPoints[p] = ep;
+                eventPoints[k] = ep;
+		return true;
 	    }
             return false;
         }
@@ -40,10 +40,10 @@ class EventQueue{
             return e;
         }
 
-        void addLine(Line line){
+        void addLine(std::shared_ptr<Line> line){
             /**/
             //std::cout << "Adding line "<< *line << "\n";
-            Point p1 = *(line.getP1());
+            Point p1 = *(line->getP1());
 	    std::shared_ptr<EventPoint> e1 = std::make_shared<EventPoint>(EventPoint(p1));
             //std::cout << "Adding p1 "<< *p1 << "\n";
     
@@ -66,7 +66,7 @@ class EventQueue{
             
             setMinAndMaxX(std::make_shared<EventPoint>(p1));
         
-            Point p2 = *(line.getP2());
+            Point p2 = *(line->getP2());
 	    std::shared_ptr<EventPoint> e2 = std::make_shared<EventPoint>(EventPoint(p2));
             
 	    //std::cout << "Adding p2 "<< *p2 << "\n";
@@ -96,29 +96,29 @@ class EventQueue{
                     
             //if the p1.y is greater than the p2.y, then add the line to the list of linesStartingAtEventPoint of p1. 
             if(p1.getY()>p2.getY()){
-                e1->addLineToListStartingAtEventPoint(line);
+                e1->addLineToListStartingAtEventPoint(*line);
                 //and therefore add the line to the list of linesEndingAtEventPoint of p2
-                e2->addLineToListEndingAtEventPoint(line);
+                e2->addLineToListEndingAtEventPoint(*line);
             }else if (p1.getY()<p2.getY()){
                 //if the p2.y is greater than the p1.y then add the line to the list of linesStartingAtEventPoint of p2. 
-                e2->addLineToListStartingAtEventPoint(line);
+                e2->addLineToListStartingAtEventPoint(*line);
                 //and therefore add the line to the list of linesEndingAtEventPoint of p2
-                e1->addLineToListEndingAtEventPoint(line);
+                e1->addLineToListEndingAtEventPoint(*line);
             } else if (p1.getY()==p2.getY()){
                 //if both p2.y and p1.y are equal
                 if(p1.getX()<p2.getX()){
                     //if p1.x is lower than p2.x then add the line to the list of linesStartingAtEventPoint of p1.
-                    e1->addLineToListStartingAtEventPoint(line);
+                    e1->addLineToListStartingAtEventPoint(*line);
                     //and therefore add the line to the list of linesEndingAtEventPoint of p2
-                    e2->addLineToListEndingAtEventPoint(line);
+                    e2->addLineToListEndingAtEventPoint(*line);
                 } else if(p1.getX()>p2.getX()) {
                     //if p2.x is lower than p1.x then add the line to the list of linesStartingAtEventPoint of p2.
-                    e2->addLineToListStartingAtEventPoint(line);
+                    e2->addLineToListStartingAtEventPoint(*line);
                     //and therefore add the line to the list of linesEndingAtEventPoint of p1
-                    e1->addLineToListEndingAtEventPoint(line);
+                    e1->addLineToListEndingAtEventPoint(*line);
                 } else {
-                    e1->addLineToListStartingAtEventPoint(line);
-                    e2->addLineToListEndingAtEventPoint(line);
+                    e1->addLineToListStartingAtEventPoint(*line);
+                    e2->addLineToListEndingAtEventPoint(*line);
                 }
             }
         }

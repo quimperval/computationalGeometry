@@ -23,7 +23,7 @@ class IntersectionFinder{
         ~IntersectionFinder(){
         }
 
-        void addLine(Line& line){
+        void addLine(std::shared_ptr<Line> line){
             eventQueue.addLine(line);
         }
 
@@ -96,7 +96,8 @@ class IntersectionFinder{
                 
                 
             }
-            
+	    std::cout << "@@@@@@@@@@@@@" << std::endl;
+            std::cout << " returning response with size: " << response.size() << std::endl; 
             return response;
             //
         }
@@ -107,8 +108,8 @@ class IntersectionFinder{
 	/*
 	 * swl: sweepLine
 	 */
-        void handleEventPoint(std::shared_ptr<EventPoint> p, std::shared_ptr<Line> swl, std::list<std::shared_ptr<Point>> intersections){
-
+        void handleEventPoint(std::shared_ptr<EventPoint> p, std::shared_ptr<Line> swl, std::list<std::shared_ptr<Point>>& intersections){
+            std::cout << " Handle event Point " << *p << std::endl;
             //Find all segments stored in the status structure
             //that contain p
 	    //U(p)
@@ -132,16 +133,19 @@ class IntersectionFinder{
 	   std::unordered_set<std::shared_ptr<Line>, LinePtrHash> unionLpCp;
 	   std::unordered_set<std::shared_ptr<Line>, LinePtrHash> unionUpCp;
 	   for(auto l : Up){
-               std::cout << "Checking line " << l << std::endl;
+               std::cout << "Checking line " << l << " and adding yo unionLpUpCp " << std::endl;
 	       unionLpUpCp.insert(l);
 	       unionUpCp.insert(l);
 	   }
            for(auto l : Lp){
+	
+               std::cout << "Checking line " << l << " and adding yo unionLpUpCp and to unionLpCp " << std::endl;
                unionLpUpCp.insert(l);
 	       unionLpCp.insert(l);
 	   }
 
 	   for(auto l : Cp){
+               std::cout << "Checking line " << l << " and adding yo unionLpUpCp and to unionLpCp and to unionUpCp" << std::endl;
                unionLpUpCp.insert(l);
 	       unionLpCp.insert(l);
 	       unionUpCp.insert(l);
@@ -159,6 +163,7 @@ class IntersectionFinder{
 		    ip->setX(p->getX());
 		    ip->setY(p->getY());
 		    intersections.push_back(ip);
+		    std::cout << "Intersections size: " << intersections.size() << std::endl;
 		    
 	    }
            for(auto elem : unionLpCp)
@@ -178,6 +183,7 @@ class IntersectionFinder{
 	   {
             //personal comment: first remove them from the status structure, and then reinsert.
             std::cout << "@+@+@+@+@+@+@+@+@+ Status Structure size: " << statusStr.size() << std::endl;
+	    std::cout << " Removing "<< *elem << std::endl;
 	    statusStr.removeLine(elem);
 
             std::cout << "@+@+@+@+@+@+@+@+@+ Status Structure size after removal of element: " << statusStr.size() << std::endl;
@@ -185,6 +191,7 @@ class IntersectionFinder{
             //U(p) and C(p) into the status structure, for this is necessary 
             //the sweep line
             //Deleting and re-inserting the segments of C(p) reverses their order
+	    std::cout << "Trying to add " << *elem << " to the status structure  based on the swl :" << *swl << std::endl;
             statusStr.addLine(elem,swl);
 	    auto swlInt = statusStr.getSwpLineIntersection(elem);           
 	    std::cout << "Line intersection: " << *swlInt << std::endl;
@@ -275,23 +282,41 @@ class IntersectionFinder{
 		}
 
             }
+	    std::cout << "Intersections size: " << intersections.size() << std::endl;
         }
 
 	void findNewEvent(std::shared_ptr<Line> sl, std::shared_ptr<Line> sr, std::shared_ptr<Point> p, std::shared_ptr<Line> swl){
 	    std::cout << "Find new event: " << std::endl;
+	    std::cout << "sl is: " << *sl << std::endl;
+
+	    std::cout << "sr is: " << *sr << std::endl;
             if(checker.existIntersection(sl,sr)){
+		std::cout << "There exists an intersection" << std::endl;
 	        auto intsct = checker.calculateIntersection(sl,sr);
-		if(checker.isPointBelowLine(intsct,swl)){
-                    
-		} else if (checker.isPointInLine(intsct, swl)){
-                    if(*intsct> *p){
-			std::shared_ptr<EventPoint> ep = std::make_shared<EventPoint>(EventPoint(intsct->getX(), intsct->getY()));
-                        eventQueue.insertEvent(ep); 
-		    }
+		bool toBeAdded = false;
+		if(checker.isPointBelowLine(intsct,swl))
+		{
+		    std::cout << "The point is below the swl or is in the swl" << std::endl;
+		    toBeAdded = true;
+		}else if ( checker.isPointInLine(intsct, swl)){
+		    std::cout << "The point is over the sweep linr" << std::endl;
+                        if(intsct->getX() > p->getX())
+			{
+			    toBeAdded = true;
+			}
 		}
-
-
-
+	       if(toBeAdded)
+	       {
+			std::cout << "The intersection is to the right of p " << std::endl;
+			std::shared_ptr<EventPoint> ep = std::make_shared<EventPoint>(EventPoint(intsct->getX(), intsct->getY()));
+                        ep->addLineToListWithEventPointInItsInterior(*sl);
+			ep->addLineToListWithEventPointInItsInterior(*sr);
+			eventQueue.insertEvent(ep); 
+			
+		}
+	    }else 
+	    {
+                std::cout << " There is no intersection? " << std::endl;
 	    }
 	}
 

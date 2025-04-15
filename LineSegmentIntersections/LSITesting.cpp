@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <map>
+#include <memory>
 
 //#include "BSTNode.h"
 //#include "BST.h"
@@ -62,16 +63,18 @@ TEST_F(LSITesting, testEventPointGreaterThanTrue){
         //std::cout << "e1: "<< *e1 << std::endl;
         //std::cout << "e2: "<< *e2 << std::endl;
         bool comparison = *e1>*e2;
-        ASSERT_THAT(comparison,true);
+	//in this case e2 goes first, as 9 is less than 10.
+	//Then it will be analyzed first, from left to right
+        ASSERT_THAT(comparison,false);
 }
 
 TEST_F(LSITesting, testCreateLine){
         
-        Line line(std::make_shared<Point>(Point(25.0, 38.0)),std::make_shared<Point>( Point(40.75, 66.25)));
+	std::shared_ptr<Line> line= std::make_shared<Line>(Line(std::make_shared<Point>(Point(25.0, 38.0)),std::make_shared<Point>( Point(40.75, 66.25))));
         //std::cout << *line << "\n";
         
 
-        Line line2(std::make_shared<Point>(Point(0, 0)),std::make_shared<Point>( Point(100, 100)));
+	std::shared_ptr<Line> line2= std::make_shared<Line>(Line(std::make_shared<Point>(Point(0, 0)),std::make_shared<Point>( Point(100, 100))));
         //std::cout << *line2 << "\n";
         
 
@@ -92,15 +95,15 @@ TEST_F(LSITesting, testCreateLine){
 }
 
 TEST_F(LSITesting, testTwoEqualPoint){
-        Line line(std::make_shared<Point>(Point(0, 0)), std::make_shared<Point>(Point(40.75, 66.25)));
+	std::shared_ptr<Line> line= std::make_shared<Line>(Line(std::make_shared<Point>(Point(0, 0)), std::make_shared<Point>(Point(40.75, 66.25))));
         //std::cout << *line << "\n";
         
 
-        Line line2(std::make_shared<Point>( Point(0, 0)), std::make_shared<Point>(Point(100, 100)));
+	std::shared_ptr<Line> line2 = std::make_shared<Line>(Line(std::make_shared<Point>( Point(0, 0)), std::make_shared<Point>(Point(100, 100))));
         //std::cout << *line2 << "\n";
         
 
-        Line line3(std::make_shared<Point>( Point(2, 35)), std::make_shared<Point>(Point(25, 13)));
+	std::shared_ptr<Line> line3 = std::make_shared<Line>(Line(std::make_shared<Point>( Point(2, 35)), std::make_shared<Point>(Point(25, 13))));
         //std::cout << *line3 << "\n";
 
 
@@ -129,15 +132,15 @@ TEST_F(LSITesting, testTwoEqualPoint){
 
 TEST_F(LSITesting, testThreeLines){
         
-        Line line(std::make_shared<Point>(Point(0, 0)), std::make_shared<Point>(Point(40.75, 66.25)));
+	std::shared_ptr<Line> line = std::make_shared<Line>(Line(std::make_shared<Point>(Point(0, 0)), std::make_shared<Point>(Point(40.75, 66.25))));
         //std::cout << *line << "\n";
         
 
-        Line line2(std::make_shared<Point>( Point(0, 0)), std::make_shared<Point>(Point(100, 100)));
+	std::shared_ptr<Line> line2= std::make_shared<Line>(Line(std::make_shared<Point>( Point(0, 0)), std::make_shared<Point>(Point(100, 100))));
         //std::cout << *line2 << "\n";
         
 
-        Line line3(std::make_shared<Point>( Point(2, 35)), std::make_shared<Point>( Point(25, 13)));
+	std::shared_ptr<Line> line3= std::make_shared<Line>(Line(std::make_shared<Point>( Point(2, 35)), std::make_shared<Point>( Point(25, 13))));
         //std::cout << *line3 << "\n";
 
         IntersectionFinder* finder = new IntersectionFinder();
@@ -268,33 +271,70 @@ TEST_F(LSITesting, testStatusStructure0){
 	ASSERT_THAT(0, sSt->size());
 }
 
-TEST_F(LSITesting, testEmtpyEventQueue){
+TEST_F(LSITesting, testWithEmptyEventQueue){
         //std::cout << "#######################################\n";
         //std::cout << "#######################################\n";
         //std::cout << "Testing emtpy event queue\n";
         //std::cout << "#######################################\n";
         //std::cout << "#######################################\n";
-	std::shared_ptr<Line> line1 = std::make_shared<Line>(std::make_shared<Point>(Point(1, 1)), std::make_shared<Point>(Point(4, 4)));
-	std::shared_ptr<Line> line2 = std::make_shared<Line>(Line(std::make_shared<Point>(Point(1, 8)), std::make_shared<Point>(Point(2, 4))));
+	std::shared_ptr<Line> line1 = std::make_shared<Line>(std::make_shared<Point>(Point(0, 0)), std::make_shared<Point>(Point(2, 2)));
+	std::shared_ptr<Line> line2 = std::make_shared<Line>(Line(std::make_shared<Point>(Point(0, 2)), std::make_shared<Point>(Point(2, 0))));
         auto intersections = finder.findIntersections();
 
         ASSERT_THAT(0, intersections.size());
 }
-/*
-TEST_F(LSITesting, testIntersections1Line){
-        //std::cout << "#######################################\n";
-        //std::cout << "#######################################\n";
-        //std::cout << "Testing 1 line intersections\n";
-        //std::cout << "#######################################\n";
-        //std::cout << "#######################################\n";
-        ASSERT_THAT(checker,NotNull());
-        Line* line1 = new Line(new Point(1, 1), new Point(4, 4));
-        Line* line2 = new Line(new Point(1, 8), new Point(2, 4));
-        auto intersections = finder.findIntersections();
-        finder.addLine(line1);
-        ASSERT_THAT(0, intersections->size());
+
+TEST_F(LSITesting, testEventPointOrder)
+{
+    EventPoint ep1(0,0);
+
+    EventPoint ep2(0,2);
+    ASSERT_TRUE( ep1 < ep2);
+
+    EventPoint ep3(1,3);
+    EventPoint ep4(4,3);
+
+    ASSERT_TRUE( ep3 > ep4);
+
+    std::map<EventPoint, EventPoint> mmap;
+    mmap[ep1] = ep1;
+
+    mmap[ep4] = ep4;
+    mmap[ep2] = ep2;
+    mmap[ep3] = ep3;
+    for ( auto it= mmap.begin(); it!=mmap.end(); it++)
+    {
+        std::cout << it->first << std::endl;
+    }
 }
 
+TEST_F(LSITesting, testIntersections1Line){
+        std::cout << "#######################################\n";
+        std::cout << "#######################################\n";
+        std::cout << "Testing 1 line intersections\n";
+        std::cout << "#######################################\n";
+        std::cout << "#######################################\n";
+        ASSERT_THAT(checker,NotNull());
+        
+
+	std::shared_ptr<Line> line1 = std::make_shared<Line>(std::make_shared<Point>(Point(0, 0)), std::make_shared<Point>(Point(2, 2)));
+	std::cout << " Line 1 is :" << *line1 << std::endl;
+
+	std::shared_ptr<Line> line2 = std::make_shared<Line>(Line(std::make_shared<Point>(Point(0, 2)), std::make_shared<Point>(Point(2, 0))));
+        std::cout << " Line 2 is: " << *line2 << std::endl;
+        finder.addLine(line1);
+	finder.addLine(line2);
+	finder.printEventPointsOrdered();
+	auto intersections = finder.findIntersections();
+	std::cout << "Intersections size: " << intersections.size() << std::endl;
+        //finder.addLine(line1);
+        ASSERT_THAT(1, intersections.size());
+	for( auto item : intersections)
+	{
+            std::cout << "intersection: " << item << std::endl;
+	}
+}
+/*
 TEST_F(LSITesting, testIntersections2Lines){
         std::cout << "#######################################\n";
         std::cout << "#######################################\n";

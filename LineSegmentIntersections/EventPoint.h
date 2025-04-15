@@ -97,7 +97,7 @@ bool operator>(const EventPoint& e1, const EventPoint& e2){
         return true;
     } else if (e1.getY()==e2.getY()){
         //std::cout << "Debug: e1.getY() == e2.getY() and e1.getX() > e2.getX()" << std::endl;
-        if(e1.getX()>e2.getX()){
+        if(e1.getX()<e2.getX()){
             return true;
         } 
     } 
@@ -112,7 +112,7 @@ bool operator<(const EventPoint& e1, const EventPoint& e2){
     if(e1.getY()<e2.getY()){
         return true;
     } else if (e1.getY()==e2.getY()){
-        if(e1.getX()<e2.getX()){
+        if(e1.getX()>e2.getX()){
             return true;
         } 
     } 
